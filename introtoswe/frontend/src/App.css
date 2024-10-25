@@ -1,3 +1,8 @@
+* {
+  /* possibly not working - will have to come back to this */
+  font-family: 'Open Sans', sans-serif;
+}
+
 .App {
   text-align: center;
 }
