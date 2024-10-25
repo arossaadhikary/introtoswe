@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
+
+//VARIABLE NAMES ARE OUT OF WACK
+//Beginner = intern
+//intermediate = junior
+//advanced = senior
+//need to fix all component files
 export default function Record() {
   const [form, setForm] = useState({
     name: "",
@@ -83,7 +89,7 @@ export default function Record() {
   // This following section will display the form that takes the input from the user.
   return (
     <>
-      <h3 className="text-lg font-semibold p-4">Create/Update Employee Record</h3>
+      <h3 className="text-lg font-semibold p-4">Create/Update Listing</h3>
       <form
         onSubmit={onSubmit}
         className="border rounded-lg overflow-hidden p-4"
@@ -91,7 +97,7 @@ export default function Record() {
         <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-slate-900/10 pb-12 md:grid-cols-2">
           <div>
             <h2 className="text-base font-semibold leading-7 text-slate-900">
-              Employee Info
+              Listing Info
             </h2>
             <p className="mt-1 text-sm leading-6 text-slate-600">
               This information will be displayed publicly so be careful what you
@@ -105,7 +111,7 @@ export default function Record() {
                 htmlFor="name"
                 className="block text-sm font-medium leading-6 text-slate-900"
               >
-                Name
+                Club Name
               </label>
               <div className="mt-2">
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-slate-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
@@ -126,7 +132,7 @@ export default function Record() {
                 htmlFor="position"
                 className="block text-sm font-medium leading-6 text-slate-900"
               >
-                Position
+                Description
               </label>
               <div className="mt-2">
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-slate-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
@@ -148,49 +154,49 @@ export default function Record() {
                 <div className="space-y-4 sm:flex sm:items-center sm:space-x-10 sm:space-y-0">
                   <div className="flex items-center">
                     <input
-                      id="positionIntern"
+                      id="positionBeginner"
                       name="positionOptions"
                       type="radio"
-                      value="Intern"
+                      value="Beginner"
                       className="h-4 w-4 border-slate-300 text-slate-600 focus:ring-slate-600 cursor-pointer"
-                      checked={form.level === "Intern"}
+                      checked={form.level === "Beginner"}
                       onChange={(e) => updateForm({ level: e.target.value })}
                     />
                     <label
                       htmlFor="positionIntern"
                       className="ml-3 block text-sm font-medium leading-6 text-slate-900 mr-4"
                     >
-                      Intern
+                      Beginner
                     </label>
                     <input
                       id="positionJunior"
                       name="positionOptions"
                       type="radio"
-                      value="Junior"
+                      value="Intermediate"
                       className="h-4 w-4 border-slate-300 text-slate-600 focus:ring-slate-600 cursor-pointer"
-                      checked={form.level === "Junior"}
+                      checked={form.level === "Intermediate"}
                       onChange={(e) => updateForm({ level: e.target.value })}
                     />
                     <label
                       htmlFor="positionJunior"
                       className="ml-3 block text-sm font-medium leading-6 text-slate-900 mr-4"
                     >
-                      Junior
+                      Intermediate
                     </label>
                     <input
                       id="positionSenior"
                       name="positionOptions"
                       type="radio"
-                      value="Senior"
+                      value="Advanced"
                       className="h-4 w-4 border-slate-300 text-slate-600 focus:ring-slate-600 cursor-pointer"
-                      checked={form.level === "Senior"}
+                      checked={form.level === "Advanced"}
                       onChange={(e) => updateForm({ level: e.target.value })}
                     />
                     <label
                       htmlFor="positionSenior"
                       className="ml-3 block text-sm font-medium leading-6 text-slate-900 mr-4"
                     >
-                      Senior
+                      Advanced
                     </label>
                   </div>
                 </div>
@@ -200,7 +206,7 @@ export default function Record() {
         </div>
         <input
           type="submit"
-          value="Save Employee Record"
+          value="Post Listing"
           className="inline-flex items-center justify-center whitespace-nowrap text-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-slate-100 hover:text-accent-foreground h-9 rounded-md px-3 cursor-pointer mt-4"
         />
       </form>

@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+//VARIABLE NAMES ARE OUT OF WACK
+//Beginner = intern
+//intermediate = junior
+//advanced = senior
+//need to fix all component files
 const Record = (props) => (
   <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
     <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
@@ -79,20 +84,20 @@ export default function RecordList() {
   // This following section will display the table with the records of individuals.
   return (
     <>
-      <h3 className="text-lg font-semibold p-4">Employee Records</h3>
+      <h3 className="text-lg font-semibold p-4">Listings</h3>
       <div className="border rounded-lg overflow-hidden">
         <div className="relative w-full overflow-auto">
           <table className="w-full caption-bottom text-sm">
             <thead className="[&amp;_tr]:border-b">
               <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                 <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                  Name
+                  Club Name
                 </th>
                 <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                  Position
+                  Job Description
                 </th>
                 <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                  Level
+                  Difficulty
                 </th>
                 <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
                   Action
