@@ -1,8 +1,8 @@
 import React from 'react';
 import { Card, CardContent, Typography } from '@mui/material';
 
-function CategoryCard({ category, title, description }) {
-  const categoryStyles = {
+function ListingCard({ category, title, description }) {
+  const listingStyles = {
     "Tech": { backgroundColor: "#4CAF50" },
     "Education": { backgroundColor: "#2196F3" },
     "Health": { backgroundColor: "#FF5722" },
@@ -10,7 +10,7 @@ function CategoryCard({ category, title, description }) {
   };
 
   return (
-    <Card sx={{ minHeight: 120, ...categoryStyles[category] }}>
+    <Card sx={{ minHeight: 120, ...listingStyles[category] }}>
       <CardContent>
         <Typography variant="h6">{title}</Typography>
         <Typography variant="body2">{description}</Typography>
@@ -19,4 +19,4 @@ function CategoryCard({ category, title, description }) {
   );
 }
 
-export default CategoryCard;
+export default ListingCard;

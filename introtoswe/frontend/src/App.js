@@ -2,7 +2,7 @@ import React from 'react';
 
 // pages
 import Home from './pages/home/Home';
-import Login from './pages/login/Login';
+import Login from './pages/login/LoginDialog';
 
 // components
 import Nav from './components/nav-bar/Navbar';

@@ -1,12 +1,13 @@
 import React from 'react';
 import { Grid, Box, Typography } from '@mui/material';
-import CategoryCard from '../../components/CategoryCard';
+import ListingCard from './ListingCard';
 
 function RecentListings() {
   const listings = [
     { category: "Tech", title: "Tech Workshop", description: "Learn React basics." },
     { category: "Education", title: "Math Tutoring", description: "Algebra tutoring available." },
     { category: "Health", title: "Yoga Class", description: "Free yoga session on Sunday." },
+    { category: "Art", title: "Painting Workshop", description: "Explore your creativity with colors." },
     { category: "Art", title: "Painting Workshop", description: "Explore your creativity with colors." },
   ];
 
@@ -18,7 +19,7 @@ function RecentListings() {
       <Grid container spacing={2}>
         {listings.map((listing, index) => (
           <Grid item xs={6} sm={3} key={index}>
-            <CategoryCard
+            <ListingCard
               category={listing.category}
               title={listing.title}
               description={listing.description}
