@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../AuthContext"; // Import useAuth to access login function
+import { useAuth } from "../AuthContext";
 
 export default function Login() {
   const [form, setForm] = useState({ username: "", password: "" });
   const navigate = useNavigate();
-  const { login } = useAuth(); // Destructure login from useAuth
+  const { login } = useAuth();
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -18,12 +18,8 @@ export default function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        // Store token in localStorage for session persistence
-        localStorage.setItem("token", data.token);
-
-        // Update auth state to reflect login immediately
-        login(data.token); // Call login function to set auth state and save token in context
-        navigate("/"); // Redirect to homepage or dashboard
+        login(data.token, data.username);
+        navigate("/");
       } else {
         alert(data.message || "Login failed");
       }
