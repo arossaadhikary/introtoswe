@@ -8,10 +8,10 @@ import CodeIcon from '@mui/icons-material/Code';
 import './Categories.css';
 
 const categories = [
-  { title: 'Sports', icon: <SportsBasketballIcon />, color: '#FFA726' },
-  { title: 'Science', icon: <ScienceIcon />, color: '#66BB6A' },
-  { title: 'Art', icon: <PaletteIcon />, color: '#42A5F5' },
-  { title: 'Coding', icon: <CodeIcon />, color: '#AB47BC' },
+  { title: 'Health', icon: <SportsBasketballIcon />, color: '#FF5722' },
+  { title: 'Science', icon: <ScienceIcon />, color: '#2196F3' },
+  { title: 'Art', icon: <PaletteIcon />, color: '#9C27B0' },
+  { title: 'Coding', icon: <CodeIcon />, color: '#FFA726' },
 ];
 
 const Categories = () => {

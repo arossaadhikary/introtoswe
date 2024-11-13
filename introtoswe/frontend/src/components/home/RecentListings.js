@@ -4,8 +4,8 @@ import ListingCard from './ListingCard';
 
 function RecentListings() {
   const listings = [
-    { category: "Tech", title: "Tech Workshop", description: "Learn React basics." },
-    { category: "Education", title: "Math Tutoring", description: "Algebra tutoring available." },
+    { category: "Coding", title: "Tech Workshop", description: "Learn React basics." },
+    { category: "Science", title: "Math Tutoring", description: "Algebra tutoring available." },
     { category: "Health", title: "Yoga Class", description: "Free yoga session on Sunday." },
     { category: "Art", title: "Painting Workshop", description: "Explore your creativity with colors." },
     { category: "Art", title: "Painting Workshop", description: "Explore your creativity with colors." },
