@@ -28,7 +28,7 @@ const HomeImg = () => {
         </Typography>
 
         {/* Search Bar with Icon */}
-        <TextField
+        {/* <TextField
           variant="outlined"
           placeholder="Search..."
           fullWidth
@@ -44,7 +44,7 @@ const HomeImg = () => {
               </InputAdornment>
             ),
           }}
-        />
+        /> */}
       </Box>
     </div>
   );

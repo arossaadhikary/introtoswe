@@ -22,12 +22,14 @@ const MakeListingDialog = ({ open, onClose }) => {
   const [difficulty, setDifficulty] = useState('');
   const [urgency, setUrgency] = useState('');
   const [description, setDescription] = useState('');
+  const [category, setCategory] = useState('');
 
   const isFormValid =
     serviceRequest.trim() &&
     deadline.trim() &&
     difficulty.trim() &&
     urgency.trim() &&
+    category.trim() &&
     description.trim();
 
   const handleSubmit = () => {
@@ -38,13 +40,14 @@ const MakeListingDialog = ({ open, onClose }) => {
       deadline,
       difficulty,
       urgency,
+      category,
       description,
     });
-    onClose(); // close MakeListingDialog when submitted
+    onClose(); // Close dialog after submission
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="s" fullWidth scroll="paper">
+    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth scroll="paper">
       <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography variant="h6">Make a Listing</Typography>
         <IconButton onClick={onClose} aria-label="close">
@@ -56,7 +59,6 @@ const MakeListingDialog = ({ open, onClose }) => {
         <Box component="form" display="flex" flexDirection="column" gap={2}>
           {/* Service Request Field */}
           <TextField
-            style={{ marginTop: '5px' }}
             label="Service Request"
             type="text"
             variant="outlined"
@@ -81,7 +83,7 @@ const MakeListingDialog = ({ open, onClose }) => {
           />
 
           {/* Difficulty Dropdown */}
-          <FormControl fullWidth required>
+          <FormControl fullWidth required error={!difficulty}>
             <InputLabel id="difficulty-label">Estimated Difficulty</InputLabel>
             <Select
               labelId="difficulty-label"
@@ -94,6 +96,22 @@ const MakeListingDialog = ({ open, onClose }) => {
               <MenuItem value="4">4</MenuItem>
               <MenuItem value="5">5</MenuItem>
             </Select>
+            {!difficulty && <FormHelperText>This field is required</FormHelperText>}
+          </FormControl>
+
+          {/* Category Dropdown */}
+          <FormControl fullWidth required error={!category}>
+            <InputLabel id="category-label">Category</InputLabel>
+            <Select
+              labelId="category-label"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <MenuItem value="sports">Sports</MenuItem>
+              <MenuItem value="tech">Tech</MenuItem>
+              <MenuItem value="medicine">Medicine</MenuItem>
+            </Select>
+            {!category && <FormHelperText>Please select a category</FormHelperText>}
           </FormControl>
 
           {/* Urgency Dropdown */}
@@ -131,6 +149,7 @@ const MakeListingDialog = ({ open, onClose }) => {
             sx={{ mt: 2 }}
             onClick={handleSubmit}
             disabled={!isFormValid}
+            aria-label="submit-listing"
           >
             Submit
           </Button>
