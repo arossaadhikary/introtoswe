@@ -1,17 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Grid, Typography, Button, Card, Avatar } from '@mui/material';
 import ListingCard from '../../components/home/ListingCard';
+import MakeListingDialog from '../../pages/make-listing/MakeListingDialog'; 
 
 function UserProfile() {
+  // current state variable = openMakeListingDialog
+  // setter function (setOpenMakeListingDialog) updates value of current state  
+  const [openMakeListingDialog, setOpenMakeListingDialog] = useState(false);
+
+  const openMakeListing = () => {
+    setOpenMakeListingDialog(true);
+  };
+
+  const closeMakeListingDialog = () => {
+    setOpenMakeListingDialog(false);
+  };
+
   const recentListings = [
     { category: "Coding", title: "Tech Workshop", description: "Learn React basics." },
     { category: "Science", title: "Math Tutoring", description: "Algebra tutoring available." },
   ];
-  const inProgressListings = [
-    { category: "Health", title: "Yoga Class", description: "Free yoga session on Sunday." },
-  ];
-  const completedListings = [
-    { category: "Art", title: "Painting Mural", description: "Test"},
+
+  const starredListings = [
+    { category: "Coding", title: "Tech Workshop", description: "Learn React basics." },
+    { category: "Science", title: "Math Tutoring", description: "Algebra tutoring available." },
   ];
 
   return (
@@ -24,6 +36,7 @@ function UserProfile() {
         p: 10,
       }}
     >
+
       <Typography variant="h4" align="center" gutterBottom sx={{ mb: 4 }}>
         John's Skillswap
       </Typography>
@@ -45,7 +58,7 @@ function UserProfile() {
           {/*Created Listings Section */}
           <Box sx={{ mb: 4 }}>
             <Typography variant="h5">Created Listings</Typography>
-            <Button variant="contained" sx={{ backgroundColor: '#66BB6A', color: 'white', my: 1 }}>
+            <Button onClick={openMakeListing} variant="contained" sx={{ backgroundColor: '#66BB6A', color: 'white', my: 1 }}>
               Make another listing
             </Button>
             <Grid container spacing={2}>
@@ -61,11 +74,11 @@ function UserProfile() {
             </Grid>
           </Box>
 
-          {/* Listings In Progress Section */}
+          {/* Starred Listings */}
           <Box sx={{ mb: 4 }}>
-            <Typography variant="h5">In Progress</Typography>
+            <Typography variant="h5">Starred Listings</Typography>
             <Grid container spacing={2}>
-              {inProgressListings.map((listing, index) => (
+              {starredListings.map((listing, index) => (
                 <Grid item xs={12} sm={6} key={index}>
                   <ListingCard
                     category={listing.category}
@@ -77,24 +90,11 @@ function UserProfile() {
             </Grid>
           </Box>
 
-           {/* Completed Section
-           <Box>
-            <Typography variant="h5">Completed</Typography>
-            <Grid container spacing={2}>
-              {completedListings.map((listing, index) => (
-                <Grid item xs={12} sm={6} key={index}>
-                  <ListingCard
-                    category={listing.category}
-                    title={listing.title}
-                    description={listing.description}
-                  />
-                </Grid>
-              ))}
-            </Grid>
-          </Box> */}
-
         </Grid>
       </Grid>
+
+
+      <MakeListingDialog open={openMakeListingDialog} onClose={closeMakeListingDialog} />
     </Box>
   );
 }
