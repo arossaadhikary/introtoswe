@@ -42,9 +42,9 @@ function UserProfile() {
         </Grid>
 
         <Grid item xs={12} sm={8}>
-          {/* Recent Listings Section */}
+          {/*Created Listings Section */}
           <Box sx={{ mb: 4 }}>
-            <Typography variant="h5">Recent Listings</Typography>
+            <Typography variant="h5">Created Listings</Typography>
             <Button variant="contained" sx={{ backgroundColor: '#66BB6A', color: 'white', my: 1 }}>
               Make another listing
             </Button>
@@ -61,7 +61,7 @@ function UserProfile() {
             </Grid>
           </Box>
 
-          {/* In Progress Section */}
+          {/* Listings In Progress Section */}
           <Box sx={{ mb: 4 }}>
             <Typography variant="h5">In Progress</Typography>
             <Grid container spacing={2}>
@@ -77,7 +77,7 @@ function UserProfile() {
             </Grid>
           </Box>
 
-           {/* In Progress Section */}
+           {/* Completed Section
            <Box>
             <Typography variant="h5">Completed</Typography>
             <Grid container spacing={2}>
@@ -91,7 +91,7 @@ function UserProfile() {
                 </Grid>
               ))}
             </Grid>
-          </Box>
+          </Box> */}
 
         </Grid>
       </Grid>
