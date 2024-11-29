@@ -7,11 +7,11 @@ const Footer = () => {
     {
       title: "Categories",
       links: [
-        "Graphics & Design",
-        "Digital Marketing",
-        "Writing & Translation",
-        "Video & Animation",
-        "Music & Audio",
+        "STEM & Technology",
+        "Arts & Creativity",
+        "Leadership & Professional Development",
+        "Community Service",
+        "Health & Recreation",
       ],
     },
     {

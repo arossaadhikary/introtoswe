@@ -11,11 +11,11 @@ import HandshakeIcon from '@mui/icons-material/Handshake';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 
 const categories = [
-  { title: 'STEM & Technology', icon: <ComputerIcon />, color: '#FF5722' },
-  { title: 'Arts & Creativity', icon: <BrushIcon />, color: '#2196F3' },
-  { title: 'Leadership & Professional Development', icon: <PeopleAltIcon />, color: '#9C27B0' },
-  { title: 'Community & Service', icon: <HandshakeIcon />, color: '#FFA726' },
-  { title: 'Health, Wellness, & Recreation', icon: <FitnessCenterIcon />, color: '#FFA726' },
+  { title: 'STEM & Technology', icon: <ComputerIcon />, color: '#7FB3D5' }, // Lighter Blue
+  { title: 'Arts', icon: <BrushIcon />, color: '#73C2FB' }, // Light Sky Blue
+  { title: 'Leadership & Professional Development', icon: <PeopleAltIcon />, color: '#FF8300' }, // Vibrant Orange
+  { title: 'Community Service', icon: <HandshakeIcon />, color: '#FBC77F' }, // Lighter Golden Orange
+  { title: 'Health & Recreation', icon: <FitnessCenterIcon />, color: '#5DADE2' }, // Lighter Blue
 ];
 
 const Categories = () => {

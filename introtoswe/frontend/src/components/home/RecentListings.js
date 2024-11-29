@@ -4,11 +4,46 @@ import ListingCard from './ListingCard';
 
 function RecentListings() {
   const listings = [
-    { category: "Coding", title: "Tech Workshop", description: "Learn React basics." },
-    { category: "Science", title: "Math Tutoring", description: "Algebra tutoring available." },
-    { category: "Health", title: "Yoga Class", description: "Free yoga session on Sunday." },
-    { category: "Art", title: "Painting Workshop", description: "Explore your creativity with colors." },
-    { category: "Art", title: "Painting Workshop", description: "Explore your creativity with colors." },
+    {
+      category: "STEM & Technology",
+      title: "Tech Workshop",
+      description: "Learn React basics.",
+      organization: "UF Coding Club",
+      deadline: "12/10/2024",
+      type: "Workshop",
+    },
+    {
+      category: "Leadership & Professional Development",
+      title: "Mock Trial Participant",
+      description: "Participate in mock trials to develop public speaking skills.",
+      organization: "UF Mock Trial Team",
+      deadline: "12/15/2024",
+      type: "Event Participation",
+    },
+    {
+      category: "Health & Recreation",
+      title: "Yoga Class",
+      description: "Free yoga session on Sunday.",
+      organization: "UF Wellness Club",
+      deadline: "12/05/2024",
+      type: "Class",
+    },
+    {
+      category: "Arts",
+      title: "Painting Workshop",
+      description: "Explore your creativity with colors.",
+      organization: "UF Art Society",
+      deadline: "12/20/2024",
+      type: "Workshop",
+    },
+    {
+      category: "Community Service",
+      title: "Gardening Graphic",
+      description: "Design promotional graphics for the gardening event.",
+      organization: "UF Gardening Club",
+      deadline: "12/08/2024",
+      type: "Design Request",
+    },
   ];
 
   return (
@@ -23,6 +58,9 @@ function RecentListings() {
               category={listing.category}
               title={listing.title}
               description={listing.description}
+              organization={listing.organization} // Pass organization
+              deadline={listing.deadline} // Pass deadline
+              type={listing.type} // Pass type of service
             />
           </Grid>
         ))}
