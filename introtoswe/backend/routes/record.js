@@ -1,7 +1,7 @@
 import express from "express";
 import { ObjectId } from "mongodb";
 import jwt from "jsonwebtoken";
-import db from "../db/connection.js";
+import { getDb } from "../db/connection.js"; // Correctly import getDb
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -21,11 +21,12 @@ function verifyToken(req, res) {
 // Route to get all records (no authentication needed)
 router.get("/", async (req, res) => {
   try {
+    const db = getDb(); // Retrieve the database instance
     const collection = db.collection("records");
     const results = await collection.find({}).toArray();
     res.status(200).json(results);
   } catch (error) {
-    console.error(error);
+    console.error("Error retrieving records:", error.message, error.stack);
     res.status(500).send("Error retrieving records");
   }
 });
@@ -33,12 +34,15 @@ router.get("/", async (req, res) => {
 // Route to get a single record by id (no authentication needed)
 router.get("/:id", async (req, res) => {
   try {
+    const db = getDb();
     const collection = db.collection("records");
     const query = { _id: new ObjectId(req.params.id) };
     const result = await collection.findOne(query);
-    result ? res.status(200).json(result) : res.status(404).send("Record not found");
+    result
+      ? res.status(200).json(result)
+      : res.status(404).send("Record not found");
   } catch (error) {
-    console.error(error);
+    console.error("Error retrieving record:", error.message, error.stack);
     res.status(500).send("Error retrieving record");
   }
 });
@@ -49,6 +53,7 @@ router.post("/", async (req, res) => {
   if (!decoded) return;
 
   try {
+    const db = getDb(); // Get the database instance
     const newDocument = {
       name: req.body.name,
       position: req.body.position,
@@ -59,17 +64,20 @@ router.post("/", async (req, res) => {
     const result = await collection.insertOne(newDocument);
     res.status(201).json(result);
   } catch (error) {
-    console.error(error);
+    console.error("Error adding record:", error.message, error.stack);
     res.status(500).send("Error adding record");
   }
 });
 
 // Route to update a record by id (requires authentication)
 router.patch("/:id", async (req, res) => {
-  const decoded = verifyToken(req, res);
-  if (!decoded) return;
-
   try {
+    const decoded = verifyToken(req, res);
+    if (!decoded) {
+      return; // Stop execution if the user is unauthorized
+    }
+
+    const db = getDb(); // Get the database instance
     const query = { _id: new ObjectId(req.params.id) };
     const updates = {
       $set: {
@@ -82,26 +90,49 @@ router.patch("/:id", async (req, res) => {
 
     const collection = db.collection("records");
     const result = await collection.updateOne(query, updates);
-    res.status(200).json(result);
+
+    // Check if the record was found and updated
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: "Record not found" });
+    }
+
+    res.status(200).json({ message: "Record updated successfully", result });
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Error updating record");
+    console.error("Error updating record:", error.message, error.stack);
+
+    // Ensure only one response is sent
+    if (!res.headersSent) {
+      res.status(500).json({ message: "Error updating record", error: error.message });
+    }
   }
 });
 
 // Route to delete a record by id (requires authentication)
 router.delete("/:id", async (req, res) => {
-  const decoded = verifyToken(req, res);
-  if (!decoded) return;
-
   try {
+    const decoded = verifyToken(req, res);
+    if (!decoded) {
+      return; // Stop execution if the user is unauthorized
+    }
+
+    const db = getDb(); // Get the database instance
     const query = { _id: new ObjectId(req.params.id) };
     const collection = db.collection("records");
     const result = await collection.deleteOne(query);
-    res.status(200).json(result);
+
+    // Send response only once
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: "Record not found" });
+    }
+
+    res.status(200).json({ message: "Record deleted successfully", result });
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Error deleting record");
+    console.error("Error deleting record:", error.message, error.stack);
+
+    // Ensure only one response is sent
+    if (!res.headersSent) {
+      res.status(500).json({ message: "Error deleting record", error: error.message });
+    }
   }
 });
 
