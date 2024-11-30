@@ -43,7 +43,7 @@ const MakeListingDialog = ({ open, onClose }) => {
       category,
       description,
     });
-    onClose(); // Close dialog after submission
+    onClose(); 
   };
 
   return (
@@ -59,6 +59,7 @@ const MakeListingDialog = ({ open, onClose }) => {
         <Box component="form" display="flex" flexDirection="column" gap={2}>
           {/* Service Request Field */}
           <TextField
+            sx = {{mt: '7px'}}
             label="Service Request"
             type="text"
             variant="outlined"
@@ -76,11 +77,12 @@ const MakeListingDialog = ({ open, onClose }) => {
             fullWidth
             required
             InputLabelProps={{
-              shrink: true,
+              shrink: true, // PREVENTS LABEL OVERLAPPING
             }}
             value={deadline}
             onChange={(e) => setDeadline(e.target.value)}
           />
+
 
           {/* Difficulty Dropdown */}
           <FormControl fullWidth required error={!difficulty}>
@@ -129,6 +131,24 @@ const MakeListingDialog = ({ open, onClose }) => {
             {!urgency && <FormHelperText>Please select an urgency level</FormHelperText>}
           </FormControl>
 
+          {/* Brief Description Field */}
+          <TextField
+            label="Short 'Eyecatching' Description"
+            type="text"
+            variant="outlined"
+            fullWidth
+            multiline
+            required
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            sx={{ fontSize: '12px', mt: -2 }} 
+          >
+            This description will be visible to those considering your task. Make it captivating, clear, and enticing to draw their interest.          </Typography>
+
           {/* Description Field */}
           <TextField
             label="Description"
@@ -141,6 +161,13 @@ const MakeListingDialog = ({ open, onClose }) => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
+          <Typography
+          variant="body2"
+          color="textSecondary"
+          sx={{ fontSize: '12px', mt: -2 }}
+          >
+            Provide a detailed description that will be visible when others click on your listing. Expand on the service you're seeking to have fulfilled (i.e. colors you want included).
+          </Typography>
 
           {/* Submit Button */}
           <Button

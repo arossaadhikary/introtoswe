@@ -1,19 +1,14 @@
 import React, { useState } from 'react';
 import { Box, Grid, Typography, Button, Card, Avatar, IconButton } from '@mui/material';
 import ListingCard from '../../components/home/ListingCard';
-import MakeListingDialog from '../../components/make-listing/MakeListingDialog';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 import userProfileImage from '../../assets/userProfileImage.jpg';
 
-function UserProfile() {
-  const [openMakeListingDialog, setOpenMakeListingDialog] = useState(false);
+function UserProfile({ onOpenMakeListing }) {
   const [recentIndex, setRecentIndex] = useState(0);
   const [starredIndex, setStarredIndex] = useState(0);
-
-  const openMakeListing = () => setOpenMakeListingDialog(true);
-  const closeMakeListingDialog = () => setOpenMakeListingDialog(false);
 
   const handleNextRecent = () => {
     if (recentIndex < recentListings.length - 2) {
@@ -135,10 +130,10 @@ function UserProfile() {
 
       {/* Profile Content */}
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p: 10 }}>
-        <Grid container spacing={3} justifyContent="center">
+        <Grid container spacing={10} justifyContent="center">
           <Grid item xs={12} sm={4}>
             <Card sx={{ p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <Avatar sx={{ bgcolor: '#FFD700', width: 80, height: 80, fontSize: '2rem' }}>JA</Avatar>
+              <Avatar sx={{ bgcolor: '#333333', width: 80, height: 80, fontSize: '2rem' }}>JA</Avatar>
               <Typography variant="h6" sx={{ mt: 2 }}>John Appleseed</Typography>
               <Typography variant="subtitle2" color="textSecondary">@drjohnweg</Typography>
               <Typography variant="body2" sx={{ mt: 2, textAlign: 'center' }}>
@@ -151,8 +146,8 @@ function UserProfile() {
             {/* Created Listings Section */}
             <Box sx={{ mb: 4 }}>
               <Typography variant="h5">Created Listings</Typography>
-              <Button onClick={openMakeListing} variant="contained" sx={{ backgroundColor: '#66BB6A', color: 'white', my: 1 }}>
-                Make another listing
+              <Button onClick={onOpenMakeListing} variant="contained" sx={{ backgroundColor: '#333333', color: 'white', my: 1 }}>
+                Make Listing
               </Button>
               <Box sx={{ position: 'relative' }}>
                 {/* Arrows for navigation */}
@@ -215,8 +210,6 @@ function UserProfile() {
             </Box>
           </Grid>
         </Grid>
-
-        <MakeListingDialog open={openMakeListingDialog} onClose={closeMakeListingDialog} />
       </Box>
     </Box>
   );
