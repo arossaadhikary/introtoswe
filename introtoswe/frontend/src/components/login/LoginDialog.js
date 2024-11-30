@@ -1,76 +1,45 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent, TextField, Button, Box, Typography, InputAdornment, IconButton } from '@mui/material';
+import {
+  Dialog,
+  DialogContent,
+  TextField,
+  Button,
+  Box,
+  Typography,
+  IconButton,
+  InputAdornment,
+} from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const LoginDialog = ({ open, onClose }) => {
-  // State for form fields
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // For toggling password visibility
+  const [showPassword, setShowPassword] = useState(false); // Track password visibility
 
-  // Email validation function
-  const isValidEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+  // Check if both fields are filled
+  const isFormValid = email.trim() && password.trim();
+
+  // Toggle password visibility
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
   };
-
-  // Password validation rules
-  const hasUppercase = /[A-Z]/.test(password);
-  const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-  const hasMinLength = password.length >= 8;
-
-  // Check if all fields, email, +  password are valid => if valid then finally user can submit
-  const isFormValid =
-    firstName.trim() &&
-    lastName.trim() &&
-    isValidEmail(email) &&
-    hasUppercase &&
-    hasSymbol &&
-    hasMinLength;
-
-  const toggleShowPassword = () => setShowPassword(!showPassword);
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
       <DialogContent sx={{ padding: 4 }}>
-        <Typography variant="h5" fontWeight="bold" gutterBottom textAlign="center">
-          Welcome to SkillSwap.
-        </Typography>
-        <Typography
+        <Typography 
+          variant="h5" 
+          fontWeight="bold" 
           gutterBottom
           sx={{
-            fontSize: '15px',
-            fontStyle: 'italic',
-            textAlign: 'center',
-            mt: '-5px',
             mb: '20px',
+            textAlign: 'center',
           }}
         >
-          Let's Get Signed Up.
+          Welcome Back to Skillswap.
         </Typography>
-
         <Box component="form" display="flex" flexDirection="column" gap={2}>
-          <TextField
-            label="First Name"
-            type="text"
-            variant="outlined"
-            fullWidth
-            required
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-          <TextField
-            label="Last Name"
-            type="text"
-            variant="outlined"
-            fullWidth
-            required
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
           <TextField
             label="Email"
             type="email"
@@ -79,14 +48,10 @@ const LoginDialog = ({ open, onClose }) => {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            error={email && !isValidEmail(email)} // Show error if email is invalid
-            helperText={
-              email && !isValidEmail(email) ? 'Please enter a valid email address' : ''
-            }
           />
           <TextField
             label="Password"
-            type={showPassword ? 'text' : 'password'}
+            type={showPassword ? 'text' : 'password'} // Show/hide password based on state
             variant="outlined"
             fullWidth
             required
@@ -95,52 +60,41 @@ const LoginDialog = ({ open, onClose }) => {
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={toggleShowPassword} edge="end">
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  <IconButton
+                    onClick={handleTogglePasswordVisibility}
+                    edge="end"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
                   </IconButton>
                 </InputAdornment>
               ),
             }}
           />
 
-          {/* Password requirements */}
-          <Box sx={{ mt: 2 }}>
-            <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
-              Password Requirements:
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{ color: hasUppercase ? 'green' : 'gray' }}
-            >
-              ✔ At least one uppercase letter
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{ color: hasSymbol ? 'green' : 'gray' }}
-            >
-              ✔ At least one symbol (!@#$%^&)
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{ color: hasMinLength ? 'green' : 'gray' }}
-            >
-              ✔ At least 8 characters in length
-            </Typography>
-          </Box>
-
-          {/* Signup button */}
-          <Button
-            variant="contained"
-            sx={{
-              backgroundColor: isFormValid ? '#333333' : '#CCCCCC',
-              color: 'white',
-              my: 1,
-            }}
+          {/* Login Button */}
+          <Button 
+            variant="contained" 
+            color="primary" 
             fullWidth
             disabled={!isFormValid} // Disable button if form is invalid
+            sx={{
+              backgroundColor: isFormValid ? 'primary.main' : '#CCCCCC',
+              color: isFormValid ? 'white' : '#888888',
+            }}
           >
-            Sign Up
+            Login
           </Button>
+
+          <Typography
+            sx={{
+              fontSize: '13px',
+              fontStyle: 'italic',
+              textAlign: 'center',
+            }}
+          >
+            Need an account? Create one.
+          </Typography>
         </Box>
       </DialogContent>
     </Dialog>

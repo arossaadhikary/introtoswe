@@ -4,10 +4,14 @@ import LoginDialog from '../login/LoginDialog';
 import JoinDialog from '../login/JoinDialog';
 
 function NavBar() {
-  const [openLogin, setOpenLogin] = useState(false);
+  const [openLogin, setOpenLogin] = useState(false); // State for LoginDialog
+  const [openJoin, setOpenJoin] = useState(false); // State for JoinDialog
 
-  const handleOpenLogin = () => setOpenLogin(true);
-  const handleCloseLogin = () => setOpenLogin(false);
+  const handleOpenLogin = () => setOpenLogin(true); // Open LoginDialog
+  const handleCloseLogin = () => setOpenLogin(false); // Close LoginDialog
+
+  const handleOpenJoin = () => setOpenJoin(true); // Open JoinDialog
+  const handleCloseJoin = () => setOpenJoin(false); // Close JoinDialog
 
   return (
     <>
@@ -16,14 +20,27 @@ function NavBar() {
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             skillswap
           </Typography>
-          <Button color="inherit" onClick={handleOpenLogin}>Sign In</Button>
-          <Button variant="contained" color="primary" sx={{ marginLeft: 1 }} onClick={handleOpenLogin}>
+
+          {/* Sign In Button */}
+          <Button color="inherit" onClick={handleOpenLogin}>
+            Sign In
+          </Button>
+          
+          {/* Join Button */}
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ marginLeft: 1 }}
+            onClick={handleOpenJoin}
+          >
             Join
           </Button>
         </Toolbar>
       </AppBar>
 
+      {/* Dialog Components */}
       <LoginDialog open={openLogin} onClose={handleCloseLogin} />
+      <JoinDialog open={openJoin} onClose={handleCloseJoin} />
     </>
   );
 }
