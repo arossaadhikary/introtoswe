@@ -140,14 +140,28 @@ const MakeListingDialog = ({ open, onClose }) => {
             multiline
             required
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => {
+              if (e.target.value.length <= 100) {
+                setDescription(e.target.value);
+              }
+            }}
+            inputProps={{ maxLength: 100 }} // Enforce a hard limit
           />
           <Typography
             variant="body2"
             color="textSecondary"
-            sx={{ fontSize: '12px', mt: -2 }} 
+            sx={{ fontSize: '12px', mt: -2 }}
           >
-            This description will be visible to those considering your task. Make it captivating, clear, and enticing to draw their interest.          </Typography>
+            This description will be visible to those considering your task. Make it captivating, clear, and enticing to draw their interest.          
+          </Typography>
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            sx={{ fontSize: '12px', mt: -3.5, textAlign: 'right' }}
+          >
+            {description.length}/100 characters
+          </Typography>
+
 
           {/* Description Field */}
           <TextField

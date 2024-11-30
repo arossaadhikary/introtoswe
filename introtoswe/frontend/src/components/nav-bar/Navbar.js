@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 import LoginDialog from '../login/LoginDialog'; 
+import JoinDialog from '../login/JoinDialog';
 
 function NavBar() {
   const [openLogin, setOpenLogin] = useState(false);
