@@ -80,7 +80,7 @@ const LoginDialog = ({ open, onClose }) => {
             disabled={!isFormValid} // Disable button if form is invalid
             sx={{
               backgroundColor: isFormValid ? 'primary.main' : '#CCCCCC',
-              color: isFormValid ? 'white' : '#888888',
+              color: isFormValid ? 'white' : '#333333',
             }}
           >
             Login

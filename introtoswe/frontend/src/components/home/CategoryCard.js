@@ -1,13 +1,30 @@
 import React from 'react';
-import { Card, CardContent, Typography, Box } from '@mui/material';
-import './CategoryCard.css';
+import { Card, CardContent, Typography } from '@mui/material';
 
-const CategoryCard = ({ category, title, icon, color }) => {
+const CategoryCard = ({ title, icon, color, onClick }) => {
   return (
-    <Card className="categoryCard" sx={{ backgroundColor: color }}>
+    <Card
+      sx={{
+        backgroundColor: color,
+        textAlign: 'center',
+        cursor: 'pointer',
+        height: '120px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 2,
+        color: '#ffffff',
+        '&:hover': {
+          backgroundColor: '#333333',
+          color: '#ffffff',
+        },
+      }}
+      onClick={onClick} // Trigger on click
+    >
       <CardContent>
-        <Box className="categoryIcon">{icon}</Box>
-        <Typography variant="h6" className="categoryTitle">
+        {icon}
+        <Typography variant="body2" sx={{ mt: 1, fontWeight: 'bold' }}>
           {title}
         </Typography>
       </CardContent>

@@ -1,41 +1,41 @@
 import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-// pages
+// Pages
 import Home from './pages/home/Home';
 import UserProfile from './pages/user-profile/UserProfile';
+import Search from './pages/search/Search';
 
-// components
+// Components
 import Nav from './components/nav-bar/Navbar';
 import Footer from './components/footer/Footer';
 import MakeListingDialog from './components/make-listing/MakeListingDialog';
 
 function App() {
-  // State for MakeListingDialog
   const [openMakeListingDialog, setOpenMakeListingDialog] = useState(false);
 
-  // Handlers for MakeListingDialog
   const handleOpenMakeListingDialog = () => setOpenMakeListingDialog(true);
   const handleCloseMakeListingDialog = () => setOpenMakeListingDialog(false);
 
   return (
     <div className="App">
+      {/* Navigation Bar */}
       <Nav />
 
+      {/* Application Routes */}
       <Routes>
         <Route path="/" element={<Home />} />
-        
-        {/* Pass the handler for opening the dialog to the UserProfile */}
-      <Route 
-          path="/john_user_profile" 
-          element={<UserProfile onOpenMakeListing={handleOpenMakeListingDialog} />} 
+        <Route
+          path="/john_user_profile"
+          element={<UserProfile onOpenMakeListing={handleOpenMakeListingDialog} />}
         />
+        <Route path="/search" element={<Search />} />
       </Routes>
 
-      {/* Footer with the handler to open MakeListingDialog */}
+      {/* Footer */}
       <Footer onMakeListingClick={handleOpenMakeListingDialog} />
 
-      {/* MakeListingDialog component */}
+      {/* MakeListingDialog */}
       <MakeListingDialog
         open={openMakeListingDialog}
         onClose={handleCloseMakeListingDialog}

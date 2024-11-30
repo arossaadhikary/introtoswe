@@ -25,12 +25,11 @@ function NavBar() {
           <Button color="inherit" onClick={handleOpenLogin}>
             Sign In
           </Button>
-          
+
           {/* Join Button */}
           <Button
             variant="contained"
-            color="primary"
-            sx={{ marginLeft: 1 }}
+            sx={{backgroundColor: '#333333', ml: '5px'}}
             onClick={handleOpenJoin}
           >
             Join
