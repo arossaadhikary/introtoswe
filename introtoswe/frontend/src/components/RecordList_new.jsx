@@ -1,11 +1,11 @@
 // src/components/RecordList.js
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getAuthHeaders } from "../api"; // Import the auth headers helper
-import ChatWidget from "./chatWidget"; // Import the ChatWidget component
+import { getAuthHeaders } from "../api";
+import ChatWidget from "./ChatWidget"; // Import the ChatWidget component
 
 // Record Row Component
-const Record = ({ record, deleteRecord , onAccept}) => (
+const Record = ({ record, deleteRecord, onAccept }) => (
   <tr className="border-b transition-colors hover:bg-gray-100">
     <td className="p-4 align-middle">{record.name}</td>
     <td className="p-4 align-middle">{record.position}</td>
@@ -57,7 +57,7 @@ export default function RecordList() {
       }
     }
     getRecords();
-  }, []); // Removed dependency on records.length to prevent infinite loop
+  }, []);
 
   // Delete a record
   async function deleteRecord(id) {
@@ -124,7 +124,6 @@ export default function RecordList() {
         </div>
       </div>
 
-
       {showChat && selectedRecord && (
         <ChatWidget
           job={selectedRecord}
@@ -134,7 +133,6 @@ export default function RecordList() {
           }}
         />
       )}
-
     </>
   );
 }
