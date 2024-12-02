@@ -1,67 +1,79 @@
-import { NavLink } from "react-router-dom";
+// src/components/Navbar.js
+import { NavLink, useNavigate } from "react-router-dom";
+import React from "react";
 
 export default function Navbar() {
   const isAuthenticated = localStorage.getItem("token"); // Check if user is logged in
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Clear token on logout
+    navigate("/login"); // Redirect to login page
+  };
 
   return (
-    <div>
-      <nav className="flex justify-between items-center mb-6">
-        {/* Logo */}
-        <NavLink to="/">
-          <img
-            alt="Logo"
-            className="h-10 inline"
-            src="logo.svg"
-          />
+    <nav className="flex justify-between items-center p-4 bg-gray-800 text-white">
+      {/* Logo */}
+      <NavLink to="/" className="text-xl font-bold">
+        <img alt="Logo" className="h-10 inline" src="/logo.svg" />
+      </NavLink>
+
+      {/* Navigation Links */}
+      <div className="flex space-x-4">
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            `px-3 py-2 rounded-md text-sm font-medium ${
+              isActive ? "bg-gray-700" : "hover:bg-gray-700"
+            }`
+          }
+        >
+          Home
+        </NavLink>
+        <NavLink
+          to="/create"
+          className={({ isActive }) =>
+            `px-3 py-2 rounded-md text-sm font-medium ${
+              isActive ? "bg-gray-700" : "hover:bg-gray-700"
+            }`
+          }
+        >
+          Create Listing
         </NavLink>
 
-        {/* Navigation Links */}
-        <div className="flex space-x-4">
-          <NavLink
-            className="inline-flex items-center justify-center whitespace-nowrap text-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-slate-100 h-9 rounded-md px-3"
-            to="/"
+        {/* Conditional Links based on authentication */}
+        {isAuthenticated ? (
+          <button
+            onClick={handleLogout}
+            className="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700"
           >
-            Home
-          </NavLink>
-          <NavLink
-            className="inline-flex items-center justify-center whitespace-nowrap text-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-slate-100 h-9 rounded-md px-3"
-            to="/create"
-          >
-            Create Listing
-          </NavLink>
-
-          {/* Conditional Links based on authentication */}
-          {isAuthenticated ? (
-            <>
-              <NavLink
-                className="inline-flex items-center justify-center whitespace-nowrap text-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-slate-100 h-9 rounded-md px-3"
-                to="/"
-                onClick={() => {
-                  localStorage.removeItem("token"); // Clear token on logout
-                  window.location.reload(); // Refresh the page
-                }}
-              >
-                Logout
-              </NavLink>
-            </>
-          ) : (
-            <>
-              <NavLink
-                className="inline-flex items-center justify-center whitespace-nowrap text-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-slate-100 h-9 rounded-md px-3"
-                to="/login"
-              >
-                Login
-              </NavLink>
-              <NavLink
-                className="inline-flex items-center justify-center whitespace-nowrap text-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-slate-100 h-9 rounded-md px-3"
-                to="/register"
-              >
-                Register
-              </NavLink>
-            </>
-          )}
-        </div>
-      </nav>
-    </div>
+            Logout
+          </button>
+        ) : (
+          <>
+            <NavLink
+              to="/login"
+              className={({ isActive }) =>
+                `px-3 py-2 rounded-md text-sm font-medium ${
+                  isActive ? "bg-gray-700" : "hover:bg-gray-700"
+                }`
+              }
+            >
+              Login
+            </NavLink>
+            <NavLink
+              to="/register"
+              className={({ isActive }) =>
+                `px-3 py-2 rounded-md text-sm font-medium ${
+                  isActive ? "bg-gray-700" : "hover:bg-gray-700"
+                }`
+              }
+            >
+              Register
+            </NavLink>
+          </>
+        )}
+      </div>
+    </nav>
   );
 }
