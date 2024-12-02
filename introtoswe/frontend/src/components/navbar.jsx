@@ -1,7 +1,15 @@
-import { NavLink } from "react-router-dom";
+import React from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../AuthContext"; // Import useAuth to access authentication state and logout
 
 export default function Navbar() {
-  const isAuthenticated = localStorage.getItem("token"); // Check if user is logged in
+  const { isAuthenticated, logout } = useAuth(); // Use authentication state and logout from context
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout(); // Call logout function to clear token and update auth state
+    navigate("/"); // Redirect to homepage
+  };
 
   return (
     <div>
@@ -32,18 +40,12 @@ export default function Navbar() {
 
           {/* Conditional Links based on authentication */}
           {isAuthenticated ? (
-            <>
-              <NavLink
-                className="inline-flex items-center justify-center whitespace-nowrap text-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-slate-100 h-9 rounded-md px-3"
-                to="/"
-                onClick={() => {
-                  localStorage.removeItem("token"); // Clear token on logout
-                  window.location.reload(); // Refresh the page
-                }}
-              >
-                Logout
-              </NavLink>
-            </>
+            <button
+              className="inline-flex items-center justify-center whitespace-nowrap text-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-slate-100 h-9 rounded-md px-3"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
           ) : (
             <>
               <NavLink
