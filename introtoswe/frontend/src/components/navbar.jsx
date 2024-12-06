@@ -1,79 +1,60 @@
-// src/components/Navbar.js
-import { NavLink, useNavigate } from "react-router-dom";
-import React from "react";
+import { Link } from "react-router-dom";
+import { useAuthStore } from "../store/useAuthStore";
+import { LogOut, MessageSquare, Settings, User } from "lucide-react";
 
-export default function Navbar() {
-  const isAuthenticated = localStorage.getItem("token"); // Check if user is logged in
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.removeItem("token"); // Clear token on logout
-    navigate("/login"); // Redirect to login page
-  };
+const Navbar = () => {
+  const { logout, authUser } = useAuthStore();
 
   return (
-    <nav className="flex justify-between items-center p-4 bg-gray-800 text-white">
-      {/* Logo */}
-      <NavLink to="/" className="text-xl font-bold">
-        <img alt="Logo" className="h-10 inline" src="/logo.svg" />
-      </NavLink>
+    <header
+      className="bg-base-100 border-b border-base-300 fixed w-full top-0 z-40 
+    backdrop-blur-lg bg-base-100/80"
+    >
+      <div className="container mx-auto px-4 h-16">
+        <div className="flex items-center justify-between h-full">
+          <div className="flex items-center gap-8">
+            <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-all">
+              <div className="size-9 rounded-lg bg-primary/10 flex items-center justify-center">
+                <MessageSquare className="w-5 h-5 text-primary" />
+              </div>
+              <h1 className="text-lg font-bold">Home</h1>
+            </Link>
+          </div>
 
-      {/* Navigation Links */}
-      <div className="flex space-x-4">
-        <NavLink
-          to="/"
-          className={({ isActive }) =>
-            `px-3 py-2 rounded-md text-sm font-medium ${
-              isActive ? "bg-gray-700" : "hover:bg-gray-700"
-            }`
-          }
-        >
-          Home
-        </NavLink>
-        <NavLink
-          to="/create"
-          className={({ isActive }) =>
-            `px-3 py-2 rounded-md text-sm font-medium ${
-              isActive ? "bg-gray-700" : "hover:bg-gray-700"
-            }`
-          }
-        >
-          Create Listing
-        </NavLink>
+          <div className="flex items-center gap-8">
+            <img src="/logo.svg" alt="Logo" className="h-14 w-14" />
+            <div className="text-xl font-semibold">SkillSwap</div>
+          </div>
 
-        {/* Conditional Links based on authentication */}
-        {isAuthenticated ? (
-          <button
-            onClick={handleLogout}
-            className="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700"
-          >
-            Logout
-          </button>
-        ) : (
-          <>
-            <NavLink
-              to="/login"
-              className={({ isActive }) =>
-                `px-3 py-2 rounded-md text-sm font-medium ${
-                  isActive ? "bg-gray-700" : "hover:bg-gray-700"
-                }`
-              }
+          <div className="flex items-center gap-2">
+            <Link
+              to={"/settings"}
+              className={`
+              btn btn-sm gap-2 transition-colors
+              
+              `}
             >
-              Login
-            </NavLink>
-            <NavLink
-              to="/register"
-              className={({ isActive }) =>
-                `px-3 py-2 rounded-md text-sm font-medium ${
-                  isActive ? "bg-gray-700" : "hover:bg-gray-700"
-                }`
-              }
-            >
-              Register
-            </NavLink>
-          </>
-        )}
+              <Settings className="w-4 h-4" />
+              <span className="hidden sm:inline">Settings</span>
+            </Link>
+
+            {authUser && (
+              <>
+                <Link to={"/profile"} className={`btn btn-sm gap-2`}>
+                  <User className="size-5" />
+                  <span className="hidden sm:inline">Profile</span>
+                </Link>
+
+                <button className="flex gap-2 items-center" onClick={logout}>
+                  <LogOut className="size-5" />
+                  <span className="hidden sm:inline">Logout</span>
+                </button>
+              </>
+            )}
+          </div>
+        </div>
       </div>
-    </nav>
+    </header>
   );
-}
+};
+export default Navbar;
