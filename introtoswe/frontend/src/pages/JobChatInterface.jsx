@@ -1,177 +1,246 @@
-import React, { useState } from 'react';
-import { X, Image, Send, Settings, LogOut, User } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Grid,
+  IconButton,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+  FormControl,
+  InputLabel
+} from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import BusinessIcon from '@mui/icons-material/Business';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 
-const JobChatInterface = () => {
-  const [selectedJob, setSelectedJob] = useState(null);
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      text: "hi, how are you, I am interested in your profile, can we connect?",
-      timestamp: "14:22",
-      sender: "them"
-    },
-    {
-      id: 2,
-      text: "thanks, where are you located",
-      timestamp: "14:22",
-      sender: "them"
-    },
-    {
-      id: 3,
-      text: "can you please share more detail about your job post?",
-      timestamp: "14:22",
-      sender: "them"
-    },
-    {
-      id: 4,
-      text: "yes, I am glad we can connect",
-      timestamp: "14:24",
-      sender: "me"
-    },
-    {
-      id: 5,
-      text: "where are you located? what is your background and skillsetes?",
-      timestamp: "14:24",
-      sender: "me"
-    }
-  ]);
+const TaskManager = () => {
+  const [tasks, setTasks] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    category: 'STEM & Technology',
+    deadline: '',
+    organization: ''
+  });
 
-  // Sample jobs data
-  const jobs = [
-    {
-      id: 1,
-      clubName: "ExampleClub1",
-      jobDescription: "Do something",
-      difficulty: "Medium",
-      //status: "Offline"
-    },
-    {
-      id: 2,
-      clubName: "ExampleClub2",
-      jobDescription: "Do something else",
-      difficulty: "Easy",
-      //status: "Offline"
-    }
+  const categories = [
+    'STEM & Technology',
+    'Arts',
+    'Leadership & Professional Development',
+    'Community Service',
+    'Health and Recreation',
   ];
 
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await fetch('http://localhost:5050/task');
+        if (!response.ok) throw new Error('Failed to fetch tasks');
+        const data = await response.json();
+        setTasks(data);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    fetchTasks();
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:5050/task', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const updatedTasks = await fetch('http://localhost:5050/task').then(res => res.json());
+        setTasks(updatedTasks);
+        setFormData({
+          title: '',
+          description: '',
+          category: 'STEM & Technology',
+          deadline: '',
+          organization: ''
+        });
+        setOpenModal(false);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await fetch(`http://localhost:5050/task/${id}`, {
+        method: 'DELETE',
+      });
+      setTasks(tasks.filter(task => task._id !== id));
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Header */}
-      <div className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <img src="/logo.svg" alt="Logo" className="h-6 w-6" />
-            <div className="text-xl font-semibold">Chatty</div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <button className="p-2 hover:bg-gray-100 rounded-full">
-              <Settings size={20} />
-            </button>
-            <button className="p-2 hover:bg-gray-100 rounded-full">
-              <User size={20} />
-            </button>
-            <button className="p-2 hover:bg-gray-100 rounded-full">
-              <LogOut size={20} />
-            </button>
-          </div>
-        </div>
-      </div>
+    <Box sx={{ p: 3, pt: 10, minHeight: '100vh', backgroundColor: 'background.default' }}>
+      {/* Header and Add Button */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+        <Typography variant="h4" component="h1">
+          Tasks
+        </Typography>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={() => setOpenModal(true)}
+        >
+          Add Task
+        </Button>
+      </Box>
 
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto p-4">
-        {/* Job List */}
-        {!selectedJob && (
-          <div className="bg-white rounded-lg shadow">
-            <div className="grid grid-cols-4 gap-4 p-4 font-semibold border-b">
-              <div>Club Name</div>
-              <div>Job Description</div>
-              <div>Difficulty</div>
-              <div>Action</div>
-            </div>
-            {jobs.map((job) => (
-              <div key={job.id} className="grid grid-cols-4 gap-4 p-4 border-b hover:bg-gray-50">
-                <div>{job.clubName}</div>
-                <div>{job.jobDescription}</div>
-                <div>{job.difficulty}</div>
-                <div>
-                  <button
-                    onClick={() => setSelectedJob(job)}
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+      {/* Task Grid */}
+      <Grid container spacing={3}>
+        {tasks.map(task => (
+          <Grid item xs={12} sm={6} md={4} key={task._id}>
+            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', '&:hover': { boxShadow: 6 } }}>
+              <CardContent>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                  <Typography variant="h6" component="h2">
+                    {task.title}
+                  </Typography>
+                  <IconButton 
+                    size="small" 
+                    onClick={() => handleDelete(task._id)}
+                    sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}
                   >
-                    Chat
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+                    <DeleteIcon />
+                  </IconButton>
+                </Box>
+                
+                <Typography color="text.secondary" sx={{ mb: 2 }}>
+                  {task.description}
+                </Typography>
 
-        {/* Chat Interface */}
-        {selectedJob && (
-          <div className="bg-white rounded-lg shadow-lg">
-            {/* Chat Header */}
-            <div className="p-4 border-b flex justify-between items-center">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                  <img src="/logo.svg" alt="Logo" className="h-6 w-6" />
-                </div>
-                <div>
-                  <div className="font-semibold">{selectedJob.clubName}</div>
-                  <div className="text-sm text-gray-500">{selectedJob.status}</div>
-                </div>
-              </div>
-              <button
-                onClick={() => setSelectedJob(null)}
-                className="p-2 hover:bg-gray-100 rounded-full"
-              >
-                <X size={20} />
-              </button>
-            </div>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <LocalOfferIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
+                    <Typography variant="body2" color="text.secondary">
+                      {task.category}
+                    </Typography>
+                  </Box>
 
-            {/* Messages */}
-            <div className="h-[500px] overflow-y-auto p-4 space-y-4">
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex ${message.sender === 'me' ? 'justify-end' : 'justify-start'}`}
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <CalendarTodayIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
+                    <Typography variant="body2" color="text.secondary">
+                      {task.deadline ? formatDate(task.deadline) : 'No deadline set'}
+                    </Typography>
+                  </Box>
+
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <BusinessIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
+                    <Typography variant="body2" color="text.secondary">
+                      {task.organization || 'No organization specified'}
+                    </Typography>
+                  </Box>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+
+      {/* Add Task Modal */}
+      <Dialog open={openModal} onClose={() => setOpenModal(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>Add New Task</DialogTitle>
+        <form onSubmit={handleSubmit}>
+          <DialogContent>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <TextField
+                autoFocus
+                label="Title"
+                fullWidth
+                value={formData.title}
+                onChange={(e) => setFormData({...formData, title: e.target.value})}
+                required
+              />
+              
+              <TextField
+                label="Description"
+                fullWidth
+                multiline
+                rows={3}
+                value={formData.description}
+                onChange={(e) => setFormData({...formData, description: e.target.value})}
+                required
+              />
+              
+              <FormControl fullWidth>
+                <InputLabel>Category</InputLabel>
+                <Select
+                  value={formData.category}
+                  label="Category"
+                  onChange={(e) => setFormData({...formData, category: e.target.value})}
                 >
-                  <div
-                    className={`max-w-[70%] rounded-lg px-4 py-2 ${
-                      message.sender === 'me'
-                        ? 'bg-black text-white'
-                        : 'bg-gray-100'
-                    }`}
-                  >
-                    <div>{message.text}</div>
-                    <div className="text-xs text-gray-400 mt-1">
-                      {message.timestamp}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Message Input */}
-            <div className="p-4 border-t">
-              <div className="flex items-center space-x-2">
-                <input
-                  type="text"
-                  placeholder="Type a message..."
-                  className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <button className="p-2 hover:bg-gray-100 rounded-full">
-                  <Image size={20} className="text-gray-500" />
-                </button>
-                <button className="p-2 hover:bg-gray-100 rounded-full">
-                  <Send size={20} className="text-gray-500" />
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+                  {categories.map(category => (
+                    <MenuItem key={category} value={category}>
+                      {category}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              
+              <TextField
+                label="Deadline"
+                type="date"
+                fullWidth
+                value={formData.deadline}
+                onChange={(e) => setFormData({...formData, deadline: e.target.value})}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              
+              <TextField
+                label="Organization / Club"
+                fullWidth
+                value={formData.organization}
+                onChange={(e) => setFormData({...formData, organization: e.target.value})}
+                placeholder="Enter organization name"
+              />
+            </Box>
+          </DialogContent>
+          
+          <DialogActions sx={{ px: 3, pb: 2 }}>
+            <Button onClick={() => setOpenModal(false)}>Cancel</Button>
+            <Button type="submit" variant="contained">Add Task</Button>
+          </DialogActions>
+        </form>
+      </Dialog>
+    </Box>
   );
 };
 
-export default JobChatInterface;
+export default TaskManager;
