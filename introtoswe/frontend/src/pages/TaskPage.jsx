@@ -48,7 +48,7 @@ const TaskPage = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 pt-20">
       <Card className="max-w-2xl mx-auto">
         <CardHeader>
           <CardTitle>Create New Task</CardTitle>
@@ -66,7 +66,7 @@ const TaskPage = () => {
                 required
               />
             </div>
-
+  
             <div className="space-y-2">
               <label className="text-sm font-medium">Description</label>
               <textarea
@@ -77,7 +77,7 @@ const TaskPage = () => {
                 rows={4}
               />
             </div>
-
+  
             <div className="space-y-2">
               <label className="text-sm font-medium">Category</label>
               <select
@@ -95,7 +95,7 @@ const TaskPage = () => {
                 <option value="Others">Others</option>
               </select>
             </div>
-
+  
             <div className="space-y-2">
               <label className="text-sm font-medium">Level</label>
               <select
@@ -109,7 +109,7 @@ const TaskPage = () => {
                 <option value="Senior">Senior</option>
               </select>
             </div>
-
+  
             <div className="space-y-2">
               <label className="text-sm font-medium">Deadline</label>
               <input
@@ -121,7 +121,7 @@ const TaskPage = () => {
                 required
               />
             </div>
-
+  
             <div className="space-y-2">
               <label className="text-sm font-medium">Organization</label>
               <input
@@ -132,17 +132,10 @@ const TaskPage = () => {
                 className="w-full p-2 border rounded"
               />
             </div>
-
+  
             {error && <div className="text-red-500">{error}</div>}
-
-            <div className="flex justify-end gap-4">
-              <Button 
-                type="button" 
-                variant="outline"
-                onClick={() => navigate('/tasks')}
-              >
-                Cancel
-              </Button>
+  
+            <div className="flex justify-end">
               <Button type="submit">Create Task</Button>
             </div>
           </form>
