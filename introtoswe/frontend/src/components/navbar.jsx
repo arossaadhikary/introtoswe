@@ -3,12 +3,12 @@ import { useAuthStore } from "../store/useAuthStore";
 import { LogOut, MessageSquare, Settings, User, ClipboardList, CirclePlus } from "lucide-react";
 
 const Navbar = () => {
-  const { logout, authUser } = useAuthStore();
+  const { logout, authUser } = useAuthStore(); // Access logout and authUser
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout(); // Clear authUser and token
-    navigate("/signup"); // Redirect to signup page
+    logout(); // Clear the user and token from state and storage
+    navigate("/signup"); // Redirect to the signup page
   };
 
   return (
@@ -27,12 +27,14 @@ const Navbar = () => {
                 <h1 className="text-lg font-bold">Tasks</h1>
               </Link>
             )}
-            <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-all">
-              <div className="size-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                <MessageSquare className="w-5 h-5 text-primary" />
-              </div>
-              <h1 className="text-lg font-bold">Chat</h1>
-            </Link>
+            {authUser && ( // Only show Chat if the user is logged in
+              <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-all">
+                <div className="size-9 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <MessageSquare className="w-5 h-5 text-primary" />
+                </div>
+                <h1 className="text-lg font-bold">Chat</h1>
+              </Link>
+            )}
           </div>
 
           <div className="flex items-center gap-8">
