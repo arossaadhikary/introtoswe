@@ -40,17 +40,17 @@ const JobChatInterface = () => {
   const jobs = [
     {
       id: 1,
-      clubName: "Aiagent",
-      jobDescription: "create AI Agent",
-      difficulty: "Senior",
-      status: "Offline"
+      clubName: "ExampleClub1",
+      jobDescription: "Do something",
+      difficulty: "Medium",
+      //status: "Offline"
     },
     {
       id: 2,
-      clubName: "techcrunch",
-      jobDescription: "develop cutting age AGI",
-      difficulty: "Senior",
-      status: "Offline"
+      clubName: "ExampleClub2",
+      jobDescription: "Do something else",
+      difficulty: "Easy",
+      //status: "Offline"
     }
   ];
 
