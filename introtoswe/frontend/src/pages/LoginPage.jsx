@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
-import AuthImagePattern from "../components/AuthImagePattern";
 import { Link } from "react-router-dom";
 import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare } from "lucide-react";
+import logo from "../pages/logotransparent.png";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -108,12 +108,24 @@ const LoginPage = () => {
         </div>
       </div>
 
-      {/* Right Side - Image/Pattern */}
-      <AuthImagePattern
-        title={"Welcome back!"}
-        subtitle={"Sign in to continue your conversations and catch up with your messages."}
+    <div className="hidden lg:flex flex-col items-center justify-center bg-base-200 p-12">
+      {/* Image */}
+      <img
+        src={logo}
+        alt="Login Illustration"
+        className="max-w-full max-h-full mb-4" // Add spacing below the image
       />
+
+      {/* Subtitle */}
+      <div className="text-center">
+        <p className="text-base-content/60">
+          Skills for you. Skills for me. Skills for us.
+        </p>
+      </div>
+    </div>
+
     </div>
   );
 };
+
 export default LoginPage;

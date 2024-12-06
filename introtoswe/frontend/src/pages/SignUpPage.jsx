@@ -3,7 +3,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare, User } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import AuthImagePattern from "../components/AuthImagePattern";
+import logo from "../pages/logotransparent.png";
 import toast from "react-hot-toast";
 
 const SignUpPage = () => {
@@ -144,10 +144,21 @@ const SignUpPage = () => {
 
       {/* right side */}
 
-      <AuthImagePattern
-        title="Join our community"
-        subtitle="Connect with friends, share moments, and stay in touch with your loved ones."
+      <div className="hidden lg:flex flex-col items-center justify-center bg-base-200 p-12">
+      {/* Image /}
+      <img
+        src={logo}
+        alt="Login Illustration"
+        className="max-w-full max-h-full mb-4" // Add spacing below the image
       />
+
+      {/ Subtitle */}
+      <div className="text-center">
+        <p className="text-base-content/60">
+          Skills for you. Skills for me. Skills for us.
+        </p>
+      </div>
+    </div>
     </div>
   );
 };

@@ -17,8 +17,8 @@ const taskSchema = new mongoose.Schema({
   },
   level: {
     type: String,
-    default: 'senior', // Default value as specified
-    enum: ['Junior, Intermediate', 'Senior'], // Optional validation
+    default: 'Intermediate',
+    enum: ['Junior', 'Intermediate', 'Senior'], // Optional validation
   },
   deadline: {
     type: Date, // Stores the deadline as a Date object

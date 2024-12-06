@@ -1,23 +1,25 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Card, 
-  CardContent, 
-  CardHeader, 
-  CardTitle 
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import useTaskStore from '../store/useTaskStore';
 import { useAuthStore } from '../store/useAuthStore';
 
+const categories = [
+  { title: 'STEM & Technology', color: '#7FB3D5' },
+  { title: 'Arts', color: '#73C2FB' },
+  { title: 'Business', color: '#FF8300' },
+  { title: 'Leadership & Professional Development', color: '#FF8300' },
+  { title: 'Community Service', color: '#FBC77F' },
+  { title: 'Health & Recreation', color: '#5DADE2' },
+  { title: 'Others', color: '#A569BD' },
+];
+
 const TaskPage = () => {
-
-  const { authUser} = useAuthStore();
-  
+  const { authUser } = useAuthStore();
   const navigate = useNavigate();
-
   const { createTask } = useTaskStore();
-  
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -25,7 +27,7 @@ const TaskPage = () => {
     level: 'Intermediate',
     deadline: '',
     organization: '',
-    userCreated: authUser._id
+    userCreated: authUser._id,
   });
 
   const [error, setError] = useState('');
@@ -33,7 +35,7 @@ const TaskPage = () => {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -66,7 +68,7 @@ const TaskPage = () => {
                 required
               />
             </div>
-  
+
             <div className="space-y-2">
               <label className="text-sm font-medium">Description</label>
               <textarea
@@ -77,7 +79,7 @@ const TaskPage = () => {
                 rows={4}
               />
             </div>
-  
+
             <div className="space-y-2">
               <label className="text-sm font-medium">Category</label>
               <select
@@ -85,17 +87,24 @@ const TaskPage = () => {
                 value={formData.category}
                 onChange={handleChange}
                 className="w-full p-2 border rounded"
+                style={{
+                  backgroundColor: categories.find(
+                    (cat) => cat.title === formData.category
+                  )?.color,
+                }}
               >
-                <option value="STEM & Technology">STEM & Technology</option>
-                <option value="Arts">Arts</option>
-                <option value="Business">Business</option>
-                <option value="Leadership & Professional Development">Leadership & Professional Development</option>
-                <option value="Community Service">Community Service</option>
-                <option value="Health and Recreation">Health and Recreation</option>
-                <option value="Others">Others</option>
+                {categories.map((category) => (
+                  <option
+                    key={category.title}
+                    value={category.title}
+                    style={{ backgroundColor: category.color }}
+                  >
+                    {category.title}
+                  </option>
+                ))}
               </select>
             </div>
-  
+
             <div className="space-y-2">
               <label className="text-sm font-medium">Level</label>
               <select
@@ -104,12 +113,12 @@ const TaskPage = () => {
                 onChange={handleChange}
                 className="w-full p-2 border rounded"
               >
-                <option value="Junior">Easy</option>
+                <option value="Junior">Junior</option>
                 <option value="Intermediate">Intermediate</option>
-                <option value="Senior">Difficult</option>
+                <option value="Senior">Senior</option>
               </select>
             </div>
-  
+
             <div className="space-y-2">
               <label className="text-sm font-medium">Deadline</label>
               <input
@@ -121,7 +130,7 @@ const TaskPage = () => {
                 required
               />
             </div>
-  
+
             <div className="space-y-2">
               <label className="text-sm font-medium">Organization</label>
               <input
@@ -132,9 +141,9 @@ const TaskPage = () => {
                 className="w-full p-2 border rounded"
               />
             </div>
-  
+
             {error && <div className="text-red-500">{error}</div>}
-  
+
             <div className="flex justify-end">
               <Button type="submit">Create Task</Button>
             </div>
