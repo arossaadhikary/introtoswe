@@ -1,11 +1,11 @@
-// src/components/RecordList.js
-import React, { useEffect, useState } from "react";
+// src/components/RecordList.jsx
+import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import { getAuthHeaders } from "../api"; // Import the auth headers helper
-import ChatWidget from "./chatWidget"; // Import the ChatWidget component
+import { getAuthHeaders } from "../api/api";
+import ChatWidget from "./chatWidget";
+import { AuthContext } from "../context/AuthContext";
 
-// Record Row Component
-const Record = ({ record, deleteRecord , onAccept}) => (
+const RecordRow = ({ record, deleteRecord, onAccept }) => (
   <tr className="border-b transition-colors hover:bg-gray-100">
     <td className="p-4 align-middle">{record.name}</td>
     <td className="p-4 align-middle">{record.position}</td>
@@ -36,15 +36,20 @@ const Record = ({ record, deleteRecord , onAccept}) => (
 );
 
 export default function RecordList() {
+  const { currentUser } = useContext(AuthContext);
   const [records, setRecords] = useState([]);
-  const [selectedRecord, setSelectedRecord] = useState(null);
+  const [selectedThread, setSelectedThread] = useState(null);
   const [showChat, setShowChat] = useState(false);
 
   // Fetch records from the database
   useEffect(() => {
     async function getRecords() {
       try {
-        const response = await fetch("http://localhost:5050/record/");
+        const response = await fetch("http://localhost:5050/record/", {
+          headers: {
+            ...getAuthHeaders(),
+          },
+        });
         if (!response.ok) {
           const message = `An error occurred: ${response.statusText}`;
           console.error(message);
@@ -57,7 +62,7 @@ export default function RecordList() {
       }
     }
     getRecords();
-  }, []); // Removed dependency on records.length to prevent infinite loop
+  }, []);
 
   // Delete a record
   async function deleteRecord(id) {
@@ -85,16 +90,41 @@ export default function RecordList() {
     }
   }
 
-  // Handle Accept button click
-  const handleAccept = (record) => {
-    setSelectedRecord(record);
-    setShowChat(true);
+  const handleAccept = async (record) => {
+    try {
+      const response = await fetch("http://localhost:5050/chat/thread", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...getAuthHeaders(),
+        },
+        body: JSON.stringify({
+          recordId: record._id,
+          participantId: record.owner, // Ensure 'owner' field exists in record
+        }),
+      });
+  
+      if (response.ok) {
+        const thread = await response.json();
+        setSelectedThread(thread);
+        setShowChat(true);
+      } else {
+        const data = await response.json();
+        alert(data.message || "Failed to create or fetch chat thread.");
+      }
+    } catch (error) {
+      console.error("Error creating chat thread:", error);
+      alert("An error occurred while initiating chat.");
+    }
   };
+
+
+  
 
   // Map out the records in a table
   function recordList() {
     return records.map((record) => (
-      <Record
+      <RecordRow
         record={record}
         deleteRecord={deleteRecord}
         onAccept={handleAccept}
@@ -124,17 +154,15 @@ export default function RecordList() {
         </div>
       </div>
 
-
-      {showChat && selectedRecord && (
+      {showChat && selectedThread && (
         <ChatWidget
-          job={selectedRecord}
+          thread={selectedThread}
           onClose={() => {
             setShowChat(false);
-            setSelectedRecord(null);
+            setSelectedThread(null);
           }}
         />
       )}
-
     </>
   );
 }

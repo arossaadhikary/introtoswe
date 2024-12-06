@@ -1,3 +1,4 @@
+// src/main.jsx
 import React from "react";
 import ReactDOM from "react-dom/client";
 import {
@@ -5,28 +6,35 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import App from "./App";
-import Record from "./components/Record";
+import Record from "./components/record";
 import RecordList from "./components/RecordList";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import PrivateRoute from "./components/PrivateRoute";
+import { AuthProvider } from "./context/AuthContext";
 import "./index.css";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />, // This should include the Navbar and an Outlet for child routes
+    element: <App />, // Includes Navbar and Outlet
     children: [
       {
-        path: "/",
-        element: <RecordList />,
-      },
-      {
-        path: "/create",
-        element: <Record />,
-      },
-      {
-        path: "/edit/:id",
-        element: <Record />,
+        element: <PrivateRoute />, // Protect nested routes
+        children: [
+          {
+            path: "/",
+            element: <RecordList />,
+          },
+          {
+            path: "/create",
+            element: <Record />,
+          },
+          {
+            path: "/edit/:id",
+            element: <Record />,
+          },
+        ],
       },
       {
         path: "/login",
@@ -43,6 +51,8 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );

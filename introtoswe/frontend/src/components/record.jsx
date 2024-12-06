@@ -1,7 +1,8 @@
-// src/components/Record.js
-import React, { useState, useEffect } from "react";
+// src/components/Record.jsx
+import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getAuthHeaders } from "../api"; // Import the auth headers helper
+import { getAuthHeaders } from "../api/api.js";
+import { AuthContext } from "../context/AuthContext";
 
 export default function Record() {
   const [form, setForm] = useState({
@@ -12,6 +13,7 @@ export default function Record() {
   const [isNew, setIsNew] = useState(true);
   const params = useParams();
   const navigate = useNavigate();
+  const { currentUser } = useContext(AuthContext);
 
   useEffect(() => {
     async function fetchData() {
@@ -20,7 +22,12 @@ export default function Record() {
       setIsNew(false);
       try {
         const response = await fetch(
-          `http://localhost:5050/record/${id}`
+          `http://localhost:5050/record/${id}`,
+          {
+            headers: {
+              ...getAuthHeaders(),
+            },
+          }
         );
         if (!response.ok) {
           const message = `An error has occurred: ${response.statusText}`;
@@ -33,7 +40,11 @@ export default function Record() {
           navigate("/");
           return;
         }
-        setForm(record);
+        setForm({
+          name: record.name,
+          position: record.position,
+          level: record.level,
+        });
       } catch (error) {
         console.error("Error fetching record:", error);
       }
@@ -52,7 +63,13 @@ export default function Record() {
   // Handle form submission
   async function onSubmit(e) {
     e.preventDefault();
-    const person = { ...form };
+    const { name, position, level } = form;
+
+    if (!name || !position || !level) {
+      alert("All fields are required.");
+      return;
+    }
+
     try {
       let response;
       if (isNew) {
@@ -63,7 +80,7 @@ export default function Record() {
             "Content-Type": "application/json",
             ...getAuthHeaders(),
           },
-          body: JSON.stringify(person),
+          body: JSON.stringify({ name, position, level }),
         });
       } else {
         // Update existing record (PATCH)
@@ -73,7 +90,7 @@ export default function Record() {
             "Content-Type": "application/json",
             ...getAuthHeaders(),
           },
-          body: JSON.stringify(person),
+          body: JSON.stringify({ name, position, level }),
         });
       }
 
@@ -81,15 +98,15 @@ export default function Record() {
         const data = await response.json();
         throw new Error(data.message || `HTTP error! status: ${response.status}`);
       }
+
+      alert(isNew ? "Record created successfully." : "Record updated successfully.");
+      navigate("/");
     } catch (error) {
       console.error(
         "A problem occurred adding or updating a record: ",
         error
       );
       alert(error.message);
-    } finally {
-      setForm({ name: "", position: "", level: "" });
-      navigate("/");
     }
   }
 
@@ -100,7 +117,7 @@ export default function Record() {
       </h3>
       <form
         onSubmit={onSubmit}
-        className="border rounded-lg overflow-hidden p-4 max-w-md mx-auto"
+        className="border rounded-lg overflow-hidden p-6 max-w-md mx-auto shadow"
       >
         <div className="grid grid-cols-1 gap-x-8 gap-y-10 pb-12">
           <div>
@@ -142,14 +159,14 @@ export default function Record() {
                 htmlFor="position"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Description
+                Job Description
               </label>
               <div className="mt-2">
                 <input
                   type="text"
                   name="position"
                   id="position"
-                  placeholder="Club Description"
+                  placeholder="Job Description"
                   value={form.position}
                   onChange={(e) => updateForm({ position: e.target.value })}
                   required
@@ -168,7 +185,7 @@ export default function Record() {
                       id="levelIntern"
                       name="levelOptions"
                       type="radio"
-                      value="Intern" // Changed from 'Beginner' to 'Intern'
+                      value="Intern"
                       className="h-4 w-4 border-gray-300 text-gray-600 focus:ring-gray-600 cursor-pointer"
                       checked={form.level === "Intern"}
                       onChange={(e) => updateForm({ level: e.target.value })}
@@ -185,7 +202,7 @@ export default function Record() {
                       id="levelJunior"
                       name="levelOptions"
                       type="radio"
-                      value="Junior" // Changed from 'Intermediate' to 'Junior'
+                      value="Junior"
                       className="h-4 w-4 border-gray-300 text-gray-600 focus:ring-gray-600 cursor-pointer"
                       checked={form.level === "Junior"}
                       onChange={(e) => updateForm({ level: e.target.value })}
@@ -201,7 +218,7 @@ export default function Record() {
                       id="levelSenior"
                       name="levelOptions"
                       type="radio"
-                      value="Senior" // Changed from 'Advanced' to 'Senior'
+                      value="Senior"
                       className="h-4 w-4 border-gray-300 text-gray-600 focus:ring-gray-600 cursor-pointer"
                       checked={form.level === "Senior"}
                       onChange={(e) => updateForm({ level: e.target.value })}

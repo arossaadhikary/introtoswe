@@ -1,13 +1,15 @@
-// src/components/Register.js
+// src/components/Register.jsx
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const [form, setForm] = useState({ username: "", password: "" });
+  const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5050/auth/register", { // Ensure correct endpoint
+      const response = await fetch("http://localhost:5050/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -16,6 +18,7 @@ export default function Register() {
       if (response.ok) {
         alert("Registration successful! Please log in.");
         setForm({ username: "", password: "" }); // Reset form
+        navigate("/login");
       } else {
         alert(data.message || "Registration failed");
       }
@@ -26,8 +29,8 @@ export default function Register() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-8 p-4 border rounded">
-      <h2 className="text-2xl mb-4">Register</h2>
+    <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-8 p-6 border rounded shadow">
+      <h2 className="text-2xl mb-4 text-center">Register</h2>
       <div className="mb-4">
         <label htmlFor="username" className="block text-sm font-medium text-gray-700">
           Username
@@ -42,7 +45,7 @@ export default function Register() {
           className="mt-1 block w-full border border-gray-300 rounded-md p-2"
         />
       </div>
-      <div className="mb-4">
+      <div className="mb-6">
         <label htmlFor="password" className="block text-sm font-medium text-gray-700">
           Password
         </label>

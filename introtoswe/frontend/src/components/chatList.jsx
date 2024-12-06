@@ -1,15 +1,21 @@
-// components/ChatList.jsx
-import React, { useState, useEffect } from 'react';
+// src/components/ChatList.jsx
+import React, { useContext, useState, useEffect } from 'react';
 import ChatWidget from './chatWidget';
+import { AuthContext } from '../context/AuthContext';
+import { getAuthHeaders } from '../api/api';
 
 const ChatList = () => {
+  const { currentUser } = useContext(AuthContext);
   const [threads, setThreads] = useState([]);
   const [selectedThread, setSelectedThread] = useState(null);
   const [showChat, setShowChat] = useState(false);
 
   useEffect(() => {
-    fetchThreads();
-  }, []);
+    if (currentUser) {
+      fetchThreads();
+    }
+    // eslint-disable-next-line
+  }, [currentUser]);
 
   const fetchThreads = async () => {
     try {
@@ -18,11 +24,21 @@ const ChatList = () => {
           ...getAuthHeaders()
         }
       });
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || 'Failed to fetch threads');
+      }
       const data = await response.json();
       setThreads(data);
     } catch (error) {
       console.error('Error fetching threads:', error);
+      alert(error.message);
     }
+  };
+
+  const handleThreadClick = (thread) => {
+    setSelectedThread(thread);
+    setShowChat(true);
   };
 
   return (
@@ -42,17 +58,15 @@ const ChatList = () => {
             {threads.map(thread => (
               <div
                 key={thread._id}
-                onClick={() => {
-                  setSelectedThread(thread);
-                  setShowChat(true);
-                }}
+                onClick={() => handleThreadClick(thread)}
                 className="p-3 hover:bg-gray-100 rounded cursor-pointer"
               >
                 <div className="font-medium">
-                  {thread.participants.find(p => p._id !== currentUser._id).username}
+                  {thread.participants.find(p => p.userId !== currentUser.userId)?.username || 'Unknown'}
                 </div>
                 <div className="text-sm text-gray-500">
-                  {thread.recordId.name}
+                  {/* Assuming recordId is populated with record details */}
+                  {thread.recordId?.name || 'No Record Name'}
                 </div>
                 {thread.messages.length > 0 && (
                   <div className="text-sm truncate">
@@ -76,104 +90,4 @@ const ChatList = () => {
   );
 };
 
-// components/ChatWidget.jsx (updated)
-const ChatWidget = ({ thread, onClose }) => {
-  const [messages, setMessages] = useState(thread?.messages || []);
-  const [newMessage, setNewMessage] = useState('');
-  const [socket, setSocket] = useState(null);
-
-  useEffect(() => {
-    const ws = new WebSocket('ws://localhost:5050');
-    setSocket(ws);
-
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.threadId === thread._id) {
-        setMessages(prev => [...prev, data.message]);
-      }
-    };
-
-    return () => {
-      if (ws) ws.close();
-    };
-  }, [thread._id]);
-
-  const sendMessage = async () => {
-    if (!newMessage.trim()) return;
-
-    const messageData = {
-      threadId: thread._id,
-      content: newMessage,
-      sender: currentUser._id
-    };
-
-    try {
-      if (socket?.readyState === WebSocket.OPEN) {
-        socket.send(JSON.stringify(messageData));
-        setNewMessage('');
-      }
-    } catch (error) {
-      console.error('Error sending message:', error);
-    }
-  };
-
-  return (
-    <div className="bg-white rounded-lg shadow-lg w-80">
-      <div className="p-4 border-b">
-        <div className="flex justify-between items-center">
-          <h3 className="font-bold">
-            Chat with {thread.participants.find(p => p._id !== currentUser._id).username}
-          </h3>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">×</button>
-        </div>
-      </div>
-      
-      {/* Rest of the chat widget implementation remains similar */}
-    </div>
-  );
-};
-
-// Update in RecordList.jsx
-const Record = ({ record, deleteRecord }) => {
-  const [showChat, setShowChat] = useState(false);
-  const [chatThread, setChatThread] = useState(null);
-
-  const handleAccept = async () => {
-    try {
-      const response = await fetch('http://localhost:5050/chat/thread', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...getAuthHeaders()
-        },
-        body: JSON.stringify({
-          recordId: record._id,
-          participantId: record.owner // Assuming record has owner field
-        })
-      });
-      const thread = await response.json();
-      setChatThread(thread);
-      setShowChat(true);
-    } catch (error) {
-      console.error('Error creating chat thread:', error);
-    }
-  };
-
-  return (
-    <tr>
-      {/* Existing record fields */}
-      <td>
-        <button onClick={handleAccept}>Accept</button>
-      </td>
-      {showChat && chatThread && (
-        <ChatWidget
-          thread={chatThread}
-          onClose={() => {
-            setShowChat(false);
-            setChatThread(null);
-          }}
-        />
-      )}
-    </tr>
-  );
-};
+export default ChatList;

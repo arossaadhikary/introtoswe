@@ -1,21 +1,24 @@
-// src/components/Navbar.js
+// src/components/Navbar.jsx
 import { NavLink, useNavigate } from "react-router-dom";
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 export default function Navbar() {
-  const isAuthenticated = localStorage.getItem("token"); // Check if user is logged in
+  const { currentUser, setCurrentUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem("token"); // Clear token on logout
+    setCurrentUser(null); // Update context
     navigate("/login"); // Redirect to login page
   };
 
   return (
     <nav className="flex justify-between items-center p-4 bg-gray-800 text-white">
       {/* Logo */}
-      <NavLink to="/" className="text-xl font-bold">
-        <img alt="Logo" className="h-10 inline" src="/logo.svg" />
+      <NavLink to="/" className="text-xl font-bold flex items-center">
+        <img alt="Logo" className="h-10 mr-2" src="/logo.svg" />
+        EmployeesApp
       </NavLink>
 
       {/* Navigation Links */}
@@ -42,13 +45,18 @@ export default function Navbar() {
         </NavLink>
 
         {/* Conditional Links based on authentication */}
-        {isAuthenticated ? (
-          <button
-            onClick={handleLogout}
-            className="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700"
-          >
-            Logout
-          </button>
+        {currentUser ? (
+          <>
+            <span className="px-3 py-2 rounded-md text-sm font-medium">
+              Hello, {currentUser.username}
+            </span>
+            <button
+              onClick={handleLogout}
+              className="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700"
+            >
+              Logout
+            </button>
+          </>
         ) : (
           <>
             <NavLink

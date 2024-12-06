@@ -1,12 +1,19 @@
+// src/App.jsx
+import React from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "./components/navbar";
+import ChatList from "./components/chatList";
 
-const App = () => {
+function App() {
   return (
-    <div className="w-full p-6">
+    <div className="min-h-screen flex flex-col">
       <Navbar />
-      <Outlet />
+      <div className="flex-grow container mx-auto px-4">
+        <Outlet />
+      </div>
+      <ChatList />
     </div>
   );
-};
-export default App
+}
+
+export default App;

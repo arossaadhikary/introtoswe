@@ -1,60 +1,90 @@
 // src/components/ChatWidget.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import io from 'socket.io-client';
+import { getAuthHeaders } from '../api/api.js'; // Ensure correct extension
+import { AuthContext } from '../context/AuthContext.jsx'; // Ensure correct extension
 
-const ChatWidget = ({ job, onClose }) => {
-  const [messages, setMessages] = useState([]);
+const ChatWidget = ({ thread, onClose }) => {
+  const { currentUser } = useContext(AuthContext);
+  const [messages, setMessages] = useState(thread?.messages || []);
   const [newMessage, setNewMessage] = useState('');
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    // Initialize WebSocket connection
-    const ws = new WebSocket('ws://localhost:5050'); // Update with your WebSocket server URL
-    setSocket(ws);
+    if (!thread || !thread._id) {
+      console.error("Chat thread is not defined.");
+      return;
+    }
 
-    // Set up WebSocket event listeners
-    ws.onmessage = (event) => {
-      const message = JSON.parse(event.data);
+    const token = localStorage.getItem("token");
+    const socketInstance = io('http://localhost:5050', {
+      auth: {
+        token: token,
+      },
+    });
+
+    setSocket(socketInstance);
+
+    socketInstance.on('connect', () => {
+      console.log('Connected to WebSocket server');
+      socketInstance.emit('joinThread', thread._id);
+    });
+
+    socketInstance.on('newMessage', (message) => {
       setMessages(prev => [...prev, message]);
-    };
+    });
 
-    // Load existing messages
+    socketInstance.on('disconnect', () => {
+      console.log('Disconnected from WebSocket server');
+    });
+
+    // Fetch existing messages
     fetchMessages();
 
     return () => {
-      if (ws) {
-        ws.close();
-      }
+      if (socketInstance) socketInstance.disconnect();
     };
-  }, [job._id]);
+    // eslint-disable-next-line
+  }, [thread._id]);
 
   const fetchMessages = async () => {
     try {
-      const response = await fetch(`http://localhost:5050/messages/${job._id}`);
-      const data = await response.json();
-      setMessages(data);
+      const response = await fetch(`http://localhost:5050/chat/messages/${thread._id}`, {
+        headers: {
+          ...getAuthHeaders(),
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setMessages(data);
+      } else {
+        const data = await response.json();
+        throw new Error(data.message || 'Failed to fetch messages');
+      }
     } catch (error) {
       console.error('Error fetching messages:', error);
+      alert(error.message);
     }
   };
 
-  const sendMessage = async () => {
+  const sendMessage = () => {
     if (!newMessage.trim()) return;
 
-    const message = {
-      jobId: job._id,
-      content: newMessage,
-      sender: 'user', // Replace with actual user ID from auth system
-      timestamp: new Date()
+    const messageData = {
+      threadId: thread._id,
+      message: {
+        sender: currentUser.userId,
+        content: newMessage,
+        timestamp: new Date(),
+      },
     };
 
-    try {
-      if (socket && socket.readyState === WebSocket.OPEN) {
-        socket.send(JSON.stringify(message));
-        setMessages(prev => [...prev, message]);
-        setNewMessage('');
-      }
-    } catch (error) {
-      console.error('Error sending message:', error);
+    if (socket && socket.connected) {
+      socket.emit('chatMessage', messageData);
+      setMessages(prev => [...prev, messageData.message]);
+      setNewMessage('');
+    } else {
+      alert("Socket not connected. Please try again later.");
     }
   };
 
@@ -69,7 +99,9 @@ const ChatWidget = ({ job, onClose }) => {
     <div className="fixed bottom-4 right-4 w-80 bg-white shadow-lg rounded-lg">
       <div className="p-4 border-b">
         <div className="flex justify-between items-center">
-          <h3 className="font-bold">Chat with {job.name}</h3>
+          <h3 className="font-bold">
+            Chat with {thread.participants.find(p => p.userId !== currentUser.userId)?.username || 'Unknown'}
+          </h3>
           <button 
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 text-xl font-bold"
@@ -80,12 +112,12 @@ const ChatWidget = ({ job, onClose }) => {
       </div>
       
       <div className="h-96 overflow-y-auto p-4">
-        {messages.map(message => (
+        {messages.map((message, index) => (
           <div 
-            key={message._id || message.timestamp.toString()}
+            key={index}
             className={`mb-2 p-2 rounded ${
-              message.sender === 'user' 
-                ? 'bg-blue-100 ml-auto max-w-[80%]' 
+              message.sender === currentUser.userId
+                ? 'bg-blue-100 ml-auto max-w-[80%]'
                 : 'bg-gray-100 max-w-[80%]'
             }`}
           >
