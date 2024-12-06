@@ -1,23 +1,26 @@
 import { useEffect, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { useAuthStore } from "../store/useAuthStore";
-import SidebarSkeleton from "./skeletons/SidebarSkeleton";
+import SidebarSkeleton from "./skeletons/SidebarSkeleton"; // Skeleton import
 import { Users } from "lucide-react";
 
 const Sidebar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
-
   const { onlineUsers } = useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(""); // New state for search term
 
   useEffect(() => {
     getUsers();
   }, [getUsers]);
 
-  const filteredUsers = showOnlineOnly
-    ? users.filter((user) => onlineUsers.includes(user._id))
-    : users;
+  const filteredUsers = users
+    .filter((user) =>
+      user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) // Filter users based on search term
+    )
+    .filter((user) => (showOnlineOnly ? onlineUsers.includes(user._id) : true)); // Apply online filter if enabled
 
+  // Show the skeleton while users are loading
   if (isUsersLoading) return <SidebarSkeleton />;
 
   return (
@@ -27,7 +30,19 @@ const Sidebar = () => {
           <Users className="size-6" />
           <span className="font-medium hidden lg:block">People</span>
         </div>
-        {/* TODO: Online filter toggle */}
+
+        {/* Search Bar */}
+        <div className="mt-3 flex items-center gap-2">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)} // Update search term
+            placeholder="Search contacts..."
+            className="input input-sm w-full"
+          />
+        </div>
+
+        {/* Online filter toggle */}
         <div className="mt-3 hidden lg:flex items-center gap-2">
           <label className="cursor-pointer flex items-center gap-2">
             <input
@@ -43,6 +58,10 @@ const Sidebar = () => {
       </div>
 
       <div className="overflow-y-auto w-full py-3">
+        {filteredUsers.length === 0 && (
+          <div className="text-center text-zinc-500 py-4">No users found</div>
+        )}
+
         {filteredUsers.map((user) => (
           <button
             key={user._id}
@@ -76,12 +95,9 @@ const Sidebar = () => {
             </div>
           </button>
         ))}
-
-        {filteredUsers.length === 0 && (
-          <div className="text-center text-zinc-500 py-4">No online users</div>
-        )}
       </div>
     </aside>
   );
 };
+
 export default Sidebar;
