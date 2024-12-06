@@ -19,7 +19,7 @@ const NoChatSelected = () => {
         {/* Welcome Text */}
         <h2 className="text-2xl font-bold">Welcome to SkillSwap!</h2>
         <p className="text-base-content/60">
-          Select a conversation from the sidebar to start chatting
+          Chat with others to discuss and submit listings!
         </p>
       </div>
     </div>
