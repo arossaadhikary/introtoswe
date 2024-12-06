@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MessageSquare, Edit2, Trash2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Card, 
   CardContent, 
@@ -22,6 +23,7 @@ const categories = {
 };
 
 const TaskListPage = () => {
+  const navigate = useNavigate();
   const { tasks, loading, error, fetchTasks, deleteTask } = useTaskStore();
   const [selectedTask, setSelectedTask] = useState(null);
 
@@ -31,7 +33,7 @@ const TaskListPage = () => {
 
   const handleEdit = (task) => {
     setSelectedTask(task);
-    // Navigate to edit page or open modal
+    navigate('/tasks');
   };
 
   const handleDelete = async (taskId) => {
@@ -43,6 +45,8 @@ const TaskListPage = () => {
   const handleChat = (task) => {
     // Implement chat functionality
     console.log('Opening chat for task:', task._id);
+    setSelectedTask(task);
+    navigate('/');
   };
 
   // Helper function to format date
