@@ -1,9 +1,15 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 import { LogOut, MessageSquare, Settings, User, ClipboardList, CirclePlus } from "lucide-react";
 
 const Navbar = () => {
   const { logout, authUser } = useAuthStore();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout(); // Clear authUser and token
+    navigate("/signup"); // Redirect to signup page
+  };
 
   return (
     <header
@@ -13,7 +19,7 @@ const Navbar = () => {
       <div className="container mx-auto px-4 h-16">
         <div className="flex items-center justify-between h-full">
           <div className="flex items-center gap-8">
-            {authUser && ( // Only show "Home" if the user is logged in
+            {authUser && (
               <Link to="/home" className="flex items-center gap-2.5 hover:opacity-80 transition-all">
                 <div className="size-9 rounded-lg bg-primary/10 flex items-center justify-center">
                   <ClipboardList className="w-5 h-5 text-primary" />
@@ -52,7 +58,7 @@ const Navbar = () => {
                   <span className="hidden sm:inline">Profile</span>
                 </Link>
 
-                <button className="flex gap-2 items-center" onClick={logout}>
+                <button className="flex gap-2 items-center" onClick={handleLogout}>
                   <LogOut className="size-5" />
                   <span className="hidden sm:inline">Logout</span>
                 </button>
