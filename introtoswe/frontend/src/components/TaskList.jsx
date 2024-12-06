@@ -1,33 +1,33 @@
-// src/components/RecordList.js
+// src/components/TaskList.js
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getAuthHeaders } from "../api"; // Import the auth headers helper
-import ChatWidget from "./chatWidget"; // Import the ChatWidget component
+// import { getAuthHeaders } from "../api"; // Import the auth headers helper
+// import ChatWidget from "./chatWidget"; // Import the ChatWidget component
 import { MessageCircle, X, Home } from 'lucide-react';
 
 
-// Record Row Component
-const Record = ({ record, deleteRecord , onAccept}) => (
+// Task Row Component
+const Task = ({ Task, deleteTask , onAccept}) => (
   <tr className="border-b transition-colors hover:bg-gray-100">
-    <td className="p-4 align-middle">{record.name}</td>
-    <td className="p-4 align-middle">{record.position}</td>
-    <td className="p-4 align-middle">{record.level}</td>
+    <td className="p-4 align-middle">{Task.name}</td>
+    <td className="p-4 align-middle">{Task.position}</td>
+    <td className="p-4 align-middle">{Task.level}</td>
     <td className="p-4 align-middle">
       <div className="flex gap-2">
         <Link
-          to={`/edit/${record._id}`}
+          to={`/edit/${Task._id}`}
           className="px-3 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600"
         >
           Edit
         </Link>
         <button
-          onClick={() => deleteRecord(record._id)}
+          onClick={() => deleteTask(Task._id)}
           className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
         >
           Delete
         </button>
         <button
-          onClick={() => onAccept(record)}
+          onClick={() => onAccept(Task)}
           className="px-3 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
         >
           Accept
@@ -37,92 +37,92 @@ const Record = ({ record, deleteRecord , onAccept}) => (
   </tr>
 );
 
-export default function RecordList() {
-  const [records, setRecords] = useState([]);
-  const [selectedRecord, setSelectedRecord] = useState(null);
+export default function TaskList() {
+  const [Tasks, setTasks] = useState([]);
+  const [selectedTask, setSelectedTask] = useState(null);
   const [showChat, setShowChat] = useState(false);
 
   const [isOpen, setIsOpen] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
 
 
-  // Fetch records from the database
+  // Fetch Tasks from the database
   useEffect(() => {
-    async function getRecords() {
+    async function getTasks() {
       try {
-        const response = await fetch("http://localhost:5050/record/");
+        const response = await fetch("http://localhost:5050/Task/");
         if (!response.ok) {
           const message = `An error occurred: ${response.statusText}`;
           console.error(message);
           return;
         }
-        const records = await response.json();
-        setRecords(records);
+        const Tasks = await response.json();
+        setTasks(Tasks);
       } catch (error) {
-        console.error("Error fetching records:", error);
+        console.error("Error fetching Tasks:", error);
       }
     }
-    getRecords();
-  }, []); // Removed dependency on records.length to prevent infinite loop
+    getTasks();
+  }, []); // Removed dependency on Tasks.length to prevent infinite loop
 
-  // Delete a record
-  async function deleteRecord(id) {
-    if (!window.confirm("Are you sure you want to delete this record?")) {
+  // Delete a Task
+  async function deleteTask(id) {
+    if (!window.confirm("Are you sure you want to delete this Task?")) {
       return;
     }
     try {
-      const response = await fetch(`http://localhost:5050/record/${id}`, {
+      const response = await fetch(`http://localhost:5050/Task/${id}`, {
         method: "DELETE",
         headers: {
           ...getAuthHeaders(),
         },
       });
       if (response.ok) {
-        const newRecords = records.filter((el) => el._id !== id);
-        setRecords(newRecords);
-        alert("Record deleted successfully.");
+        const newTasks = Tasks.filter((el) => el._id !== id);
+        setTasks(newTasks);
+        alert("Task deleted successfully.");
       } else {
         const data = await response.json();
-        alert(data.message || "Failed to delete record.");
+        alert(data.message || "Failed to delete Task.");
       }
     } catch (error) {
-      console.error("Error deleting record:", error);
-      alert("An error occurred while deleting the record.");
+      console.error("Error deleting Task:", error);
+      alert("An error occurred while deleting the Task.");
     }
   }
 
    // Sample messages based on selected job
    const getMessages = () => {
-    if (!selectedRecord) return [];
+    if (!selectedTask) return [];
     return [
       {
         id: 1,
-        sender: selectedRecord.user,
-        text: `Hi! Thanks for your interest in the "${selectedRecord.position}" position.`,
+        sender: selectedTask.user,
+        text: `Hi! Thanks for your interest in the "${selectedTask.position}" position.`,
         time: 'Just now'
       }
     ];
   };
 
   // Handle Accept button click
-  // const handleAccept = (record) => {
-  //   setSelectedRecord(record);
+  // const handleAccept = (Task) => {
+  //   setSelectedTask(Task);
   //   setShowChat(true);
   // };
-  const handleAccept = (record) => {
-    setSelectedRecord(record);
+  const handleAccept = (Task) => {
+    setSelectedTask(Task);
     setIsOpen(true);
     setShowNotification(true);
   };
 
-  // Map out the records in a table
-  function recordList() {
-    return records.map((record) => (
-      <Record
-        record={record}
-        deleteRecord={deleteRecord}
+  // Map out the Tasks in a table
+  function TaskList() {
+    return Tasks.map((Task) => (
+      <Task
+        Task={Task}
+        deleteTask={deleteTask}
         onAccept={handleAccept}
-        key={record._id}
+        key={Task._id}
       />
     ));
   }
@@ -142,7 +142,7 @@ export default function RecordList() {
               </tr>
             </thead>
             <tbody>
-              {recordList()}
+              {TaskList()}
             </tbody>
           </table>
           {/* <JobListingWithChat /> */}
@@ -220,16 +220,16 @@ export default function RecordList() {
         </div>
       </div>
 
-
-      {showChat && selectedRecord && (
+{/* 
+      {showChat && selectedTask && (
         <ChatWidget
-          job={selectedRecord}
+          job={selectedTask}
           onClose={() => {
             setShowChat(false);
-            setSelectedRecord(null);
+            setSelectedTask(null);
           }}
         />
-      )}
+      )} */}
 
     </>
   );

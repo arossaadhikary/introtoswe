@@ -37,15 +37,22 @@ const TaskManager = () => {
   const categories = [
     'STEM & Technology',
     'Arts',
+    "Business",
     'Leadership & Professional Development',
     'Community Service',
     'Health and Recreation',
   ];
 
+  const levels = [
+    'Junior',
+    'Intermediate',
+    'Senior'
+  ];
+
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await fetch('http://localhost:5050/task');
+        const response = await fetch('http://localhost:5050/api/tasks');
         if (!response.ok) throw new Error('Failed to fetch tasks');
         const data = await response.json();
         setTasks(data);
@@ -60,7 +67,7 @@ const TaskManager = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5050/task', {
+      const response = await fetch('http://localhost:5050/api/task', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -69,7 +76,7 @@ const TaskManager = () => {
       });
 
       if (response.ok) {
-        const updatedTasks = await fetch('http://localhost:5050/task').then(res => res.json());
+        const updatedTasks = await fetch('http://localhost:5050/api/task').then(res => res.json());
         setTasks(updatedTasks);
         setFormData({
           title: '',
@@ -87,7 +94,7 @@ const TaskManager = () => {
 
   const handleDelete = async (id) => {
     try {
-      await fetch(`http://localhost:5050/task/${id}`, {
+      await fetch(`http://localhost:5050/api/task/${id}`, {
         method: 'DELETE',
       });
       setTasks(tasks.filter(task => task._id !== id));
@@ -153,6 +160,13 @@ const TaskManager = () => {
                   </Box>
 
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <LocalOfferIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
+                    <Typography variant="body2" color="text.secondary">
+                      {task.levels}
+                    </Typography>
+                  </Box>
+
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <CalendarTodayIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
                     <Typography variant="body2" color="text.secondary">
                       {task.deadline ? formatDate(task.deadline) : 'No deadline set'}
@@ -207,6 +221,21 @@ const TaskManager = () => {
                   {categories.map(category => (
                     <MenuItem key={category} value={category}>
                       {category}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <FormControl fullWidth>
+                <InputLabel>Level</InputLabel>
+                <Select
+                  value={formData.levels}
+                  label="Category"
+                  onChange={(e) => setFormData({...formData, levels: e.target.value})}
+                >
+                  {levels.map(level => (
+                    <MenuItem key={level} value={level}>
+                      {level}
                     </MenuItem>
                   ))}
                 </Select>
