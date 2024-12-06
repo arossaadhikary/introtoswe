@@ -50,7 +50,7 @@ const TaskListPage = () => {
   if (error) return <div className="text-red-500 p-4">{error}</div>;
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 pt-20">
       <h1 className="text-2xl font-bold mb-6">Tasks</h1>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {tasks.map((task) => (

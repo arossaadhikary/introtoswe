@@ -4,7 +4,7 @@ import { getUsersForSidebar, getTaskById, getTasks, createTask, deleteTask, upda
 
 const router = express.Router();
 
-// router.get("/users", protectRoute, getUsersForSidebar);
+router.get("/users", protectRoute, getUsersForSidebar);
 router.get("/:id", protectRoute, getTaskById);
 router.get("/", protectRoute, getTasks);
 router.post("/", protectRoute, createTask);

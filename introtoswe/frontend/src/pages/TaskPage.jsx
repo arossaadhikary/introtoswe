@@ -22,10 +22,10 @@ const TaskPage = () => {
     title: '',
     description: '',
     category: 'STEM & Technology',
-    level: 'Senior',
+    level: 'Intermediate',
     deadline: '',
     organization: '',
-    userCreated: authUser.id
+    userCreated: authUser._id
   });
 
   const [error, setError] = useState('');
@@ -41,7 +41,7 @@ const TaskPage = () => {
     e.preventDefault();
     try {
       await createTask(formData);
-      navigate('/tasks');
+      navigate('/home');
     } catch (err) {
       setError(err.message || 'Failed to create task');
     }
@@ -104,9 +104,9 @@ const TaskPage = () => {
                 onChange={handleChange}
                 className="w-full p-2 border rounded"
               >
-                <option value="Junior">Junior</option>
+                <option value="Junior">Easy</option>
                 <option value="Intermediate">Intermediate</option>
-                <option value="Senior">Senior</option>
+                <option value="Senior">Difficult</option>
               </select>
             </div>
   
