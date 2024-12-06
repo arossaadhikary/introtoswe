@@ -108,7 +108,7 @@ const LoginPage = () => {
         </div>
       </div>
 
-      <div className="hidden lg:flex flex-col items-center justify-center bg-base-200 p-12">
+    <div className="hidden lg:flex flex-col items-center justify-center bg-base-200 p-12">
       {/* Image */}
       <img
         src={logo}
@@ -122,8 +122,8 @@ const LoginPage = () => {
           Skills for you. Skills for me. Skills for us.
         </p>
       </div>
-
     </div>
+
     </div>
   );
 };
