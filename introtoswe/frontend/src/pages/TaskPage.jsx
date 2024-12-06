@@ -8,7 +8,6 @@ import { useAuthStore } from '../store/useAuthStore';
 const categories = [
   { title: 'STEM & Technology', color: '#7FB3D5' },
   { title: 'Arts', color: '#73C2FB' },
-  { title: 'Business', color: '#FF8300' },
   { title: 'Leadership & Professional Development', color: '#FF8300' },
   { title: 'Community Service', color: '#FBC77F' },
   { title: 'Health & Recreation', color: '#5DADE2' },
@@ -82,27 +81,38 @@ const TaskPage = () => {
 
             <div className="space-y-2">
               <label className="text-sm font-medium">Category</label>
-              <select
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-                className="w-full p-2 border rounded"
+              <div
+                className="w-full border rounded"
                 style={{
                   backgroundColor: categories.find(
                     (cat) => cat.title === formData.category
                   )?.color,
+                  padding: '0.5rem',
                 }}
               >
-                {categories.map((category) => (
-                  <option
-                    key={category.title}
-                    value={category.title}
-                    style={{ backgroundColor: category.color }}
-                  >
-                    {category.title}
-                  </option>
-                ))}
-              </select>
+                <select
+                  name="category"
+                  value={formData.category}
+                  onChange={handleChange}
+                  className="w-full p-2 border-none rounded"
+                  style={{
+                    backgroundColor: 'transparent',
+                  }}
+                >
+                  {categories.map((category) => (
+                    <option
+                      key={category.title}
+                      value={category.title}
+                      style={{
+                        backgroundColor: category.color,
+                        color: '#fff', // Ensures text is visible
+                      }}
+                    >
+                      {category.title}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             <div className="space-y-2">

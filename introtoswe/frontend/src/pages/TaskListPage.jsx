@@ -11,10 +11,19 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import useTaskStore from '../store/useTaskStore';
 
+const categories = {
+  "STEM & Technology": "#7FB3D5",
+  Arts: "#73C2FB",
+  Business: "#FF8300",
+  "Leadership & Professional Development": "#FF8300",
+  "Community Service": "#FBC77F",
+  "Health & Recreation": "#5DADE2",
+  Others: "#A569BD",
+};
+
 const TaskListPage = () => {
   const { tasks, loading, error, fetchTasks, deleteTask } = useTaskStore();
   const [selectedTask, setSelectedTask] = useState(null);
-
 
   useEffect(() => {
     fetchTasks();
@@ -58,7 +67,15 @@ const TaskListPage = () => {
             <CardHeader>
               <CardTitle className="flex justify-between items-center">
                 <span className="truncate">{task.title}</span>
-                <Badge variant="secondary">{task.category}</Badge>
+                <Badge 
+                  variant="secondary" 
+                  style={{
+                    backgroundColor: categories[task.category] || '#ccc', // Fallback color
+                    color: '#fff', // White text for contrast
+                  }}
+                >
+                  {task.category}
+                </Badge>
               </CardTitle>
             </CardHeader>
             <CardContent className="flex-grow">
@@ -96,7 +113,6 @@ const TaskListPage = () => {
             </CardFooter>
           </Card>
         ))}
-        
       </div>
     </div>
   );
