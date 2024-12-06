@@ -39,6 +39,7 @@ const TaskPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('Form Data:', formData);
     try {
       await createTask(formData);
       navigate('/home');
@@ -104,9 +105,9 @@ const TaskPage = () => {
                 onChange={handleChange}
                 className="w-full p-2 border rounded"
               >
-                <option value="Junior">Easy</option>
+                <option value="Junior">Junior</option>
                 <option value="Intermediate">Intermediate</option>
-                <option value="Senior">Difficult</option>
+                <option value="Senior">Senior</option>
               </select>
             </div>
   
