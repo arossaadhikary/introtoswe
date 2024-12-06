@@ -47,7 +47,7 @@ const Navbar = () => {
 
               <Link to={"/tasks"} className="btn btn-sm gap-2">
                   <User className="size-5" />
-                  <span className="hidden sm:inline">Task</span>
+                  <span className="hidden sm:inline">Create Task</span>
                 </Link>
 
                 <Link to={"/profile"} className="btn btn-sm gap-2">
